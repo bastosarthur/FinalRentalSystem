@@ -1,0 +1,109 @@
+package org.example;
+
+import jakarta.persistence.*;
+import org.hibernate.generator.EventType;
+import org.hibernate.annotations.Generated;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.math.BigDecimal;
+import java.util.Date;
+
+
+@Entity
+@Table(name = "rentals", schema = "final_rental")
+public class Rental {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "rental_id")
+    private int rentalId;
+
+    @ManyToOne
+    @JoinColumn(name = "customer_cpf", nullable = false, updatable = false)
+    private Customer customer;
+
+    @Column(name = "initial_date", nullable = false)
+    private LocalDate initialDate;
+
+    @Column(name = "return_date", nullable = false)
+    private LocalDate returnDate;
+
+    @Generated(event = {EventType.INSERT, EventType.UPDATE})
+    @Column(name = "total_days", nullable = false, insertable = false, updatable = false)
+    private int totalDays;
+
+    @Column(name = "total_price", nullable = false, updatable = true)
+    private BigDecimal totalPrice;
+
+    @Column(name = "status", nullable = false, updatable = true)
+    private String status;
+
+    @ManyToMany
+    @JoinTable(
+            name = "rental_cars",
+            joinColumns = @JoinColumn(name = "rental_id"),
+            inverseJoinColumns = @JoinColumn(name = "car_plate"))
+    List<Car> carList;
+
+    protected Rental() {}
+
+    public Rental(Customer customer, LocalDate initialDate, LocalDate returnDate, BigDecimal totalPrice, String Status) {
+        this.customer = customer;
+        this.initialDate = initialDate;
+        this.returnDate = returnDate;
+        this.totalPrice = totalPrice;
+        this.status = status;
+    }
+
+    @Override
+        public String toString() {
+            return "\nRental ID: " + rentalId +
+                    "\nCustomer: " + customer.getCpf() +
+                    "\nInitial date: " + initialDate +
+                    "\nReturn date:" + returnDate +
+                    "\nTotal days: " + totalDays +
+                    "\nTotal Price: %.2f".formatted(totalPrice) +
+                    "\nCars: " + carList + "\n";
+    }
+
+    public int getRentalId() {
+        return rentalId;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public LocalDate getInitialDate() {
+        return initialDate;
+    }
+
+    public LocalDate getReturnDate() {
+        return returnDate;
+    }
+
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void changeInitialDate(LocalDate newDate) {
+        this.initialDate = newDate;
+    }
+
+    public void changeReturnDate(LocalDate newDate) {
+        this.returnDate = newDate;
+    }
+
+    public void changeTotalPrice(BigDecimal newPrice) {
+        this.totalPrice = newPrice;
+    }
+
+    public void changeStatus(String newStatus) {
+        this.status = newStatus;
+    }
+}
