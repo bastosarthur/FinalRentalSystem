@@ -2,6 +2,8 @@ package org.example;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "features", schema = "final_rental")
 public class Feature {
@@ -13,6 +15,9 @@ public class Feature {
 
     @Column(name = "feature", unique = true, updatable = true)
     private String feature;
+
+    @ManyToMany(mappedBy = "carFeatures")
+    List<Car> carsWithFeatureList;
 
     protected Feature() {}
 
