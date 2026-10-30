@@ -5,6 +5,7 @@ import org.hibernate.generator.EventType;
 import org.hibernate.annotations.Generated;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -44,12 +45,14 @@ public class Rental {
             name = "rental_cars",
             joinColumns = @JoinColumn(name = "rental_id"),
             inverseJoinColumns = @JoinColumn(name = "car_plate"))
-    List<Car> carList;
+    List<Car> carList = new ArrayList<>();
 
     protected Rental() {}
 
-    public Rental(Customer customer, LocalDate initialDate, LocalDate returnDate, BigDecimal totalPrice, String Status) {
+    public Rental(Customer customer, List<Car> carList, LocalDate initialDate, LocalDate returnDate,
+                  BigDecimal totalPrice, String status) {
         this.customer = customer;
+        this.carList = carList;
         this.initialDate = initialDate;
         this.returnDate = returnDate;
         this.totalPrice = totalPrice;
@@ -105,5 +108,13 @@ public class Rental {
 
     public void changeStatus(String newStatus) {
         this.status = newStatus;
+    }
+
+    public List<Car> getCarList() {
+        return carList;
+    }
+
+    public void setCarList(List<Car> carList) {
+        this.carList = carList;
     }
 }

@@ -26,6 +26,15 @@ public class Customer {
     @OneToMany(mappedBy = "customer")
     List<Rental> rentalHistory;
 
+    @Override
+        public String toString() {
+            return "\nCPF: " + cpf +
+                    "\nName: " + name +
+                    "\nEmail: " + email +
+                    "\nPhone: " + phone +
+                    "\nActive rental: " + (activeRental != null ? activeRental.getRentalId() : "N/A\n");
+    }
+
     protected Customer() {}
 
     public Customer(String cpf, String name, String email, String phone) {
