@@ -25,14 +25,14 @@ public class Car {
     @JoinColumn(name = "active_rental")
     private Rental activeRental;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "car_features",
             joinColumns = @JoinColumn(name = "car_plate"),
             inverseJoinColumns = @JoinColumn(name = "feature_id"))
     private List<Feature> carFeatures;
 
-    @ManyToMany(mappedBy = "carList")
+    @ManyToMany(mappedBy = "carList", fetch = FetchType.EAGER)
     private List<Rental> rentalHistory;
 
     protected Car() {}
@@ -47,12 +47,10 @@ public class Car {
     @Override
         public String toString() {
             return "\nCar Plate: " + plate +
-                    "\nBrand: " + brand +
-                    "\nModel: " + model +
+                    "\nBrand: " + brand.toUpperCase() +
+                    "\nModel: " + model.toUpperCase() +
                     "\nDaily Price: %.2f".formatted(dailyRate) +
-                    "\nActive Rental: " + (activeRental != null ? activeRental.getRentalId() : "N/A") +
-                    "\nFeatures: " + carFeatures +
-                    "\nRental History: " + (rentalHistory.isEmpty() ? "N/A" : rentalHistory) + "\n";
+                    "\nActive Rental: " + (activeRental != null ? activeRental.getRentalId() : "N/A") + "\n";
     }
 
     public String getPlate() {

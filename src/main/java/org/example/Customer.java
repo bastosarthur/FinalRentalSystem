@@ -20,11 +20,11 @@ public class Customer {
     @Column(name = "phone", nullable = false, updatable = true, length = 11)
     private String phone;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "active_rental")
     Rental activeRental;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER)
     List<Rental> rentalHistory;
 
     @Override

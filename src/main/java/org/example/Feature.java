@@ -28,7 +28,7 @@ public class Feature {
     @Override
         public String toString() {
             return "\nFeature ID: " + featureId +
-                    "\nFeature: " + feature + "\n";
+                    " / " + feature.toUpperCase();
     }
 
     public int getFeatureId() {

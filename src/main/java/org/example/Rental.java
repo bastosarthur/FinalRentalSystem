@@ -40,7 +40,7 @@ public class Rental {
     @Column(name = "status", nullable = false, updatable = true)
     private String status;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "rental_cars",
             joinColumns = @JoinColumn(name = "rental_id"),
@@ -63,11 +63,12 @@ public class Rental {
         public String toString() {
             return "\nRental ID: " + rentalId +
                     "\nCustomer: " + customer.getCpf() +
+                    "\nStatus: " + status.toUpperCase() +
                     "\nInitial date: " + initialDate +
-                    "\nReturn date:" + returnDate +
+                    "\nReturn date: " + returnDate +
                     "\nTotal days: " + totalDays +
-                    "\nTotal Price: %.2f".formatted(totalPrice) +
-                    "\nCars: " + carList + "\n";
+                    "\nTotal Price: %.2f".formatted(totalPrice) + "\n";
+                    //"\nCars: \n" + carList + "\n";
     }
 
     public int getRentalId() {
@@ -92,6 +93,10 @@ public class Rental {
 
     public String getStatus() {
         return status;
+    }
+
+    public int getTotalDays() {
+        return totalDays;
     }
 
     public void changeInitialDate(LocalDate newDate) {

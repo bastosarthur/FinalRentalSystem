@@ -213,4 +213,16 @@ public class Service {
             }
         }
     }
+
+    public Car searchCar(String plate) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return carDAO.findCar(session, plate);
+        }
+    }
+
+    public Rental searchRental(int rentalId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return rentalDAO.findRental(session, rentalId);
+        }
+    }
 }

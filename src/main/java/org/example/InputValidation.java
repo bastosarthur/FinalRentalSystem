@@ -82,7 +82,7 @@ public class InputValidation {
         while (true) {
             String plate = input.nextLine();
             if (plate.matches("^[A-Z]{2}[0-9]{4}$")) {
-                return plate;
+                return plate.toUpperCase();
             }
             System.out.println("Invalid plate, format = (XX1234): ");
         }

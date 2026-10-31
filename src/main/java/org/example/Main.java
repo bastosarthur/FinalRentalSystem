@@ -135,8 +135,8 @@ public class Main {
         } catch (RuntimeException exception) {
             System.out.println("\nError: " + exception.getMessage());
             System.out.println("Please try again.");
-            return null;
         }
+        return null;
     }
 
     public void registerRental(Scanner input) {
@@ -188,17 +188,114 @@ public class Main {
         }
     }
 
+    public Car searchCar(Scanner input) {
+        System.out.print("\n\nSearching a car.\nCar plate: ");
+        String plate = validation.getPlate(input);
+        try {
+            Car car = service.searchCar(plate);
+            if (car == null) {
+                System.out.println("\nCar not found.");
+                return null;
+            }
+            System.out.println(car);
+            List<Feature> carFeatures = car.getCarFeatures();
+            System.out.println("Features: ");
+            carFeatures.forEach(System.out::print);
+            System.out.println();
+            return car;
+        } catch (RuntimeException exception) {
+            System.out.println("\nError: " + exception.getMessage());
+            System.out.println("Please try again.");
+        }
+        return null;
+    }
+
+    public void customerRentalHistory(Scanner input) {
+        System.out.print("\n\nCustomer CPF: ");
+        String cpf = validation.getCpf(input);
+        try {
+            Customer customer = service.searchCustomer(cpf);
+            if (customer == null) {
+                System.out.println("\nCustomer not found.");
+                return;
+            }
+            List<Rental> customerHistory = customer.getRentalHistory();
+            System.out.println("\n" + customer);
+            System.out.println("Rental History: ");
+            if (customerHistory.isEmpty()) {
+                System.out.println("\nThis customer has no rental history.");
+                return;
+            }
+            for (Rental rental : customerHistory) {
+                System.out.print(rental);
+            }
+
+        } catch (RuntimeException exception) {
+            System.out.println("\nError: " + exception.getMessage());
+            System.out.println("Please try again.");
+        }
+    }
+
+    public void carRentalHistory(Scanner input) {
+        System.out.print("\n\nCar Plate: ");
+        String plate = validation.getPlate(input);
+        try {
+            Car car = service.searchCar(plate);
+            if (car == null) {
+                System.out.println("\nCar not found.");
+                return;
+            }
+            List<Rental> carHistory = car.getRentalHistory();
+            for (Rental rental : carHistory) {
+                System.out.println("\nRental ID: " + rental.getRentalId() +
+                                    "\nCustomer: " + rental.getCustomer().getCpf() +
+                                    "\nStatus: " + rental.getStatus().toUpperCase() +
+                                    "\nInitial date: " + rental.getInitialDate() +
+                                    "\nReturn date: " + rental.getReturnDate() +
+                                    "\nTotal days: " + rental.getTotalDays() +
+                                    "\nTotal Price: %.2f".formatted(rental.getTotalPrice()));
+            }
+        } catch (RuntimeException exception) {
+            System.out.println("\nError: " + exception.getMessage());
+            System.out.println("Please try again.");
+        }
+    }
+
+    public void searchRental(Scanner input) {
+        System.out.print("\n\nRental ID: ");
+        int rentalId = validation.getRentalId(input);
+        try {
+            Rental rental = service.searchRental(rentalId);
+            if (rental == null) {
+                System.out.println("\nRental not found.");
+                return;
+            }
+            List<Car> rentalCars = rental.getCarList();
+            System.out.println(rental);
+            System.out.println("Cars: ");
+            rentalCars.forEach(System.out::print);
+        } catch (RuntimeException exception) {
+            System.out.println("\nError: " + exception.getMessage());
+            System.out.println("Please try again.");
+        }
+    }
+
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         Main main = new Main();
 
         //main.registerFeature(input);
-
         //main.registerCustomer(input);
-
         //main.registerCar(input);
-        //main.searchCustomer(input);
         //main.registerRental(input);
+
         //main.cancelRental(input);
+
+        //Customer customer = main.searchCustomer(input);
+        //main.searchCar(input);
+        //main.customerRentalHistory(input);
+        //main.carRentalHistory(input);
+        main.searchRental(input);
+
     }
 }
