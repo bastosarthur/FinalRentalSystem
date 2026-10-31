@@ -129,12 +129,18 @@ public class Service {
             if (customer == null) {
                 return -1; // CUSTOMER NOT FOUND
             }
+            if (customer.getActiveRental() != null) {
+                return -5; // CUSTOMER ALREADY HAS AN ACTIVE RENTAL
+            }
             List<Car> carList = new ArrayList<>();
             BigDecimal sumPrice = BigDecimal.ZERO;
             for (String carPlate : carPlates) {
                 Car car = carDAO.findCar(session, carPlate);
                 if (car == null) {
                     return -2; // CAR(s) NOT FOUND;
+                }
+                if (car.getActiveRental() != null) {
+                    return -6; // CAR ALREADY HAS AN ACTIVE RENTAL.
                 }
                 carList.add(car);
                 sumPrice = sumPrice.add(car.getDailyRate());
@@ -223,6 +229,58 @@ public class Service {
     public Rental searchRental(int rentalId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return rentalDAO.findRental(session, rentalId);
+        }
+    }
+
+    public List<Rental> rentalByDate(LocalDate date) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return rentalDAO.rentalByDate(session, date);
+        }
+    }
+
+    public List<Rental> rentalByInitialDate(LocalDate initialDate) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return rentalDAO.rentalByInitialDate(session, initialDate);
+        }
+    }
+
+    public List<Rental> rentalByReturnDate(LocalDate returnDate) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return rentalDAO.rentalByReturnDate(session, returnDate);
+        }
+    }
+
+    public List<Rental> activeRentals() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return rentalDAO.activeRentals(session);
+        }
+    }
+
+    public List<Rental> canceledRentals() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return rentalDAO.canceledRentals(session);
+        }
+    }
+
+    public List<Rental> rentalsByStatus(String status) {
+        if (!status.equalsIgnoreCase("active") && !status.equalsIgnoreCase("canceled")
+        && !status.equalsIgnoreCase("reserved")) {
+            return null;
+        }
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return rentalDAO.rentalByStatus(session, status);
+        }
+    }
+
+    public Double avgRentalPrice() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return rentalDAO.avgRentalPrice(session);
+        }
+    }
+
+    public Long rentalCount() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return rentalDAO.rentalCount(session);
         }
     }
 }

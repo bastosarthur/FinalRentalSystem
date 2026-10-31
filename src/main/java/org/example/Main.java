@@ -147,7 +147,8 @@ public class Main {
         System.out.print("Return date (MM/dd/yyyy): ");
         LocalDate returnDate = validation.getReturnDate(input);
         List<String> carPlates = new ArrayList<>();
-        int contagem = 2;
+        System.out.print("How many Cars in this rental: ");
+        int contagem = validation.getQtd(input);
         while (contagem > 0) {
             System.out.print("Rental car plate: ");
             String plate = validation.getPlate(input);
@@ -161,6 +162,8 @@ public class Main {
                 case -2 -> System.out.print("\nError. Car(s) not found");
                 case -3 -> System.out.print("\nError. Invalid rental date");
                 case -4 -> System.out.print("\nError. Invalid Status.");
+                case -5 -> System.out.print("\nError. Customer already has an active rental.");
+                case -6 -> System.out.print("\nError. Car(s) not available for rental at the moment.");
                 default -> System.out.println("\nRental registered successfully.\nRental ID: " + rentalId);
             }
         } catch (RuntimeException exception) {
@@ -280,6 +283,118 @@ public class Main {
         }
     }
 
+    public void searchRentalByDate(Scanner input) {
+        System.out.print("\n\nSearching all rentals in a certain date.\nDate: ");
+        LocalDate date = validation.getInitialDate(input);
+        try {
+            List<Rental> rentalByDate = service.rentalByDate(date);
+            if (rentalByDate.isEmpty()) {
+                System.out.println("\nNo rentals on this date.");
+                return;
+            }
+            rentalByDate.forEach(System.out::print);
+        } catch (RuntimeException exception) {
+            System.out.println("\nError: " + exception.getMessage());
+            System.out.println("Please try again.");
+        }
+    }
+
+    public void rentalsByInitialDate(Scanner input) {
+        System.out.print("\n\nSearching rental by initial date.\nInitial date: ");
+        LocalDate initialDate = validation.getInitialDate(input);
+        try {
+            List<Rental> rentalsByInitialDate = service.rentalByInitialDate(initialDate);
+            if (rentalsByInitialDate.isEmpty()) {
+                System.out.println("\nNo rentals on this date.");
+                return;
+            }
+            rentalsByInitialDate.forEach(System.out::print);
+        } catch (RuntimeException exception) {
+            System.out.println("\nError: " + exception.getMessage());
+            System.out.println("Please try again.");
+        }
+    }
+
+    public void rentalsByReturnDate(Scanner input) {
+        System.out.print("\n\nSearching rentals by return date.\nReturn date: ");
+        LocalDate returnDate = validation.getReturnDate(input);
+        try {
+            List<Rental> rentalsByReturnDate = service.rentalByReturnDate(returnDate);
+            if (rentalsByReturnDate.isEmpty()) {
+                System.out.println("\nNo returned rentals on this date.");
+                return;
+            }
+            rentalsByReturnDate.forEach(System.out::print);
+        } catch (RuntimeException exception) {
+            System.out.println("\nError: " + exception.getMessage());
+            System.out.println("Please try again.");
+        }
+    }
+
+    public void activeRentals(Scanner input) {
+        try {
+            List<Rental> activeRentals = service.activeRentals();
+            if (activeRentals.isEmpty()) {
+                System.out.println("\nNo active rentals at the moment.");
+                return;
+            }
+            activeRentals.forEach(System.out::print);
+        } catch (RuntimeException exception) {
+            System.out.println("\nError: " + exception.getMessage());
+            System.out.println("Please try again.");
+        }
+    }
+
+    public void canceledRentals() {
+        try {
+            List<Rental> canceledRentals = service.canceledRentals();
+            if (canceledRentals.isEmpty()) {
+                System.out.println("\nNo canceled rentals ever. NOT VERY LIKELY HAHA");
+                return;
+            }
+            canceledRentals.forEach(System.out::print);
+        } catch (RuntimeException exception) {
+            System.out.println("\nError: " + exception.getMessage());
+            System.out.println("Please try again.");
+        }
+    }
+
+    public void rentalsByStatus(Scanner input) {
+        System.out.print("\n\nSearching rentals by status.\nStatus (active, reserved, canceled): ");
+        String status = validation.getStatus(input);
+        try {
+            List<Rental> rentalByStatus = service.rentalsByStatus(status);
+            if (rentalByStatus.isEmpty()) {
+                System.out.print("\nNo " + status + " rentals on our system.");
+                return;
+            }
+            rentalByStatus.forEach(System.out::print);
+        } catch (RuntimeException exception) {
+            System.out.println("\nError: " + exception.getMessage());
+            System.out.println("Please try again.");
+        }
+    }
+
+    public void avgRentalPrice() {
+        try {
+            Double avgRentalPrice = service.avgRentalPrice();
+            System.out.print("\n\nAverage Rental Price in our company: %.2f".formatted(avgRentalPrice));
+        } catch (RuntimeException exception) {
+            System.out.println("\nError: " + exception.getMessage());
+            System.out.println("Please try again.");
+        }
+    }
+
+    public void rentalCount() {
+        try {
+            Long rentalCount = service.rentalCount();
+            System.out.println("\n\nTotal number of rentals: " + rentalCount);
+        } catch (RuntimeException exception) {
+            System.out.println("\nError: " + exception.getMessage());
+            System.out.println("Please try again.");
+        }
+    }
+
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         Main main = new Main();
@@ -295,7 +410,16 @@ public class Main {
         //main.searchCar(input);
         //main.customerRentalHistory(input);
         //main.carRentalHistory(input);
-        main.searchRental(input);
+        //main.searchRental(input);
+
+        //main.searchRentalByDate(input);
+        //main.rentalsByInitialDate(input);
+        //main.rentalsByReturnDate(input);
+        //main.activeRentals(input);
+        //main.canceledRentals();
+        //main.rentalsByStatus(input);
+        //main.avgRentalPrice();
+        main.rentalCount();
 
     }
 }

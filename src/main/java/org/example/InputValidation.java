@@ -81,7 +81,7 @@ public class InputValidation {
     public String getPlate(Scanner input) {
         while (true) {
             String plate = input.nextLine();
-            if (plate.matches("^[A-Z]{2}[0-9]{4}$")) {
+            if (plate.matches("^[A-Z-a-z]{2}[0-9]{4}$")) {
                 return plate.toUpperCase();
             }
             System.out.println("Invalid plate, format = (XX1234): ");
@@ -139,6 +139,33 @@ public class InputValidation {
                 System.out.print("Please type a valid rental 3-digit rental ID: ");
                 input.nextLine();
             }
+        }
+    }
+
+    public int getQtd(Scanner input) {
+        while (true) {
+            try {
+                int qtd = input.nextInt();
+                input.nextLine();
+                if (qtd >= 0) {
+                    return qtd;
+                }
+                System.out.print("Please type the numbers of Cars in this rental: ");
+            } catch (InputMismatchException e) {
+                System.out.print("Please type the numbers of Cars in this rental: ");
+                input.nextLine();
+            }
+        }
+    }
+
+    public String getStatus(Scanner input) {
+        while (true) {
+            String status = input.nextLine();
+            if (status.equalsIgnoreCase("active") || status.equalsIgnoreCase("reserved")
+                || status.equalsIgnoreCase("canceled")) {
+                return status;
+            }
+            System.out.print("Please type a valid status (active, reserved or canceled): ");
         }
     }
 
