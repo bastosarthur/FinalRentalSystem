@@ -188,4 +188,29 @@ public class Service {
             }
         }
     }
+
+    public int cancelRental(int rentalId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Rental rental = rentalDAO.findRental(session, rentalId);
+            if (rental == null) {
+                return -1; // RENTAL NOT FOUND
+            }
+            Transaction transaction = session.beginTransaction();
+            try {
+                Customer customer = rental.getCustomer();
+                customer.setActiveRental(null);
+                for (Car car : rental.getCarList()) {
+                    car.setActiveRental(null);
+                }
+                rental.changeStatus("canceled");
+                transaction.commit();
+                return 1; // SUCCESS
+            } catch (RuntimeException exception) {
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
+                throw exception;
+            }
+        }
+    }
 }

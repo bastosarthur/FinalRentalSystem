@@ -35,17 +35,18 @@ public class Main {
 
     public void registerCar(Scanner input) {
         System.out.print("\n\nCar Plate: ");
-        String plate = input.nextLine();
+        String plate = validation.getPlate(input);
         System.out.print("Brand: ");
-        String brand = input.nextLine();
+        String brand = validation.getBrand(input);
         System.out.print("Model: ");
-        String model = input.nextLine();
+        String model = validation.getModel(input);
         System.out.print("Daily rate: ");
-        BigDecimal dailyRate = input.nextBigDecimal();
+        BigDecimal dailyRate = validation.getPrice(input);
         List<Integer> carFeaturesId = new ArrayList<>();
         while (true) {
             featuresMenu();
             int feature = input.nextInt();
+            input.nextLine();
             if (feature == 0) {
                 break;
             }
@@ -168,14 +169,36 @@ public class Main {
         }
     }
 
+    public void cancelRental(Scanner input) {
+        System.out.print("\n\nRental ID: ");
+        int rentalId = validation.getRentalId(input);
+        try {
+            int success = service.cancelRental(rentalId);
+            if (success == -1) {
+                System.out.println("\nError. Rental not found.");
+                return;
+            }
+            if (success == 1) {
+                System.out.println("\nRental successfully canceled.");
+                return;
+            }
+        } catch (RuntimeException exception) {
+            System.out.println("\nError: " + exception.getMessage());
+            System.out.println("Please try again.");
+        }
+    }
+
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         Main main = new Main();
 
         //main.registerFeature(input);
-        //main.registerCar(input);
+
         //main.registerCustomer(input);
+
+        //main.registerCar(input);
         //main.searchCustomer(input);
-        main.registerRental(input);
+        //main.registerRental(input);
+        //main.cancelRental(input);
     }
 }

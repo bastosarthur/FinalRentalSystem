@@ -22,7 +22,7 @@ public class CarDAO {
         return session.find(Feature.class, featureId);
     }
 
-    public Feature findFeatureByName(Session session,String featureName) {
+    public Feature findFeatureByName(Session session, String featureName) {
         return session.createQuery("""
                     FROM Feature
                     WHERE LOWER(feature) = :featureName
@@ -30,6 +30,5 @@ public class CarDAO {
                     .setParameter("featureName", featureName.toLowerCase())
                     .getSingleResultOrNull();
     }
-
 
 }

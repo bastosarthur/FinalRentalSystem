@@ -20,7 +20,8 @@ public class Customer {
     @Column(name = "phone", nullable = false, updatable = true, length = 11)
     private String phone;
 
-    @Transient
+    @OneToOne
+    @JoinColumn(name = "active_rental")
     Rental activeRental;
 
     @OneToMany(mappedBy = "customer")

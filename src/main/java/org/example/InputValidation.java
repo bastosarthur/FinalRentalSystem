@@ -3,6 +3,7 @@ package org.example;
 import java.math.BigDecimal;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -84,6 +85,60 @@ public class InputValidation {
                 return plate;
             }
             System.out.println("Invalid plate, format = (XX1234): ");
+        }
+    }
+
+    public String getBrand(Scanner input) {
+        while (true) {
+            String brand = input.nextLine();
+            if (brand.equalsIgnoreCase("mercedes") || brand.equalsIgnoreCase("bmw")
+                    || brand.equalsIgnoreCase("volvo")) {
+                return brand.toLowerCase();
+            }
+            System.out.print("\nWe only work with 'mercedes', 'bmw' and 'volvo': ");
+        }
+
+    }
+
+    public String getModel(Scanner input) {
+        while (true) {
+            String model = input.nextLine();
+            if (model.matches("^[A-Za-z, 0-9-]{2,20}$")) {
+                return model;
+            }
+            System.out.print("Type a valid model from 2 to 20 digits: ");
+        }
+    }
+
+    public BigDecimal getPrice(Scanner input) {
+        while (true) {
+            try {
+                BigDecimal price = input.nextBigDecimal();
+                input.nextLine();
+                if (price.compareTo(BigDecimal.ZERO) > 0) {
+                    return price;
+                }
+                System.out.print("Type a positive price: ");
+            } catch (InputMismatchException e) {
+                System.out.print("Type a positive price: ");
+                input.nextLine();
+            }
+        }
+    }
+
+    public int getRentalId(Scanner input) {
+        while (true) {
+            try {
+                int rentalId = input.nextInt();
+                input.nextLine();
+                if (rentalId >= 100) {
+                    return rentalId;
+                }
+                System.out.print("Please type a valid rental 3-digit rental ID: ");
+            } catch (InputMismatchException e) {
+                System.out.print("Please type a valid rental 3-digit rental ID: ");
+                input.nextLine();
+            }
         }
     }
 

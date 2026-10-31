@@ -21,7 +21,8 @@ public class Car {
     @Column(name = "daily_rate", nullable = false)
     private BigDecimal dailyRate;
 
-    @Transient
+    @ManyToOne
+    @JoinColumn(name = "active_rental")
     private Rental activeRental;
 
     @ManyToMany

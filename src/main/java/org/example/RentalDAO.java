@@ -8,4 +8,8 @@ public class RentalDAO {
         session.persist(rental);
         return rental.getRentalId();
     }
+
+    public Rental findRental(Session session, int rentalId) {
+        return session.find(Rental.class, rentalId);
+    }
 }
