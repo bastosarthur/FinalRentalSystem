@@ -146,9 +146,7 @@ public class Service {
                 sumPrice = sumPrice.add(car.getDailyRate());
             }
             long billableDays = ChronoUnit.DAYS.between(initialDate, returnDate);
-            if (billableDays == 0) {
-                billableDays = 1;
-            }
+            billableDays++;
             BigDecimal totalPrice = sumPrice.multiply(BigDecimal.valueOf(billableDays));
             LocalDate currentDate = LocalDate.now();
             if (initialDate.isBefore(currentDate)) {
@@ -362,9 +360,7 @@ public class Service {
                     newPrice = newPrice.add(car.getDailyRate());
                 }
                 long newBillableDays = rental.getTotalDays();
-                if (newBillableDays == 0) {
-                    newBillableDays = 1;
-                }
+                newBillableDays++;
                 BigDecimal newTotalPrice = newPrice.multiply(BigDecimal.valueOf(newBillableDays));
                 rental.changeTotalPrice(newTotalPrice);
                 session.flush();

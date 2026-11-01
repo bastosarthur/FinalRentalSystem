@@ -496,7 +496,7 @@ public class Main {
         //main.registerCustomer(input);
         //main.registerCar(input);
 
-        //main.registerRental(input);
+        main.registerRental(input);
         //main.cancelRental(input);
         //main.completeRental(input);
         //main.changeReturnDate(input);
@@ -512,7 +512,7 @@ public class Main {
         //main.rentalsByReturnDate(input);
         //main.activeRentals(input);
         //main.canceledRentals();
-        main.rentalsByStatus(input);
+        //main.rentalsByStatus(input);
         //main.avgRentalPrice();
         //main.rentalCount();
         //main.rentalsByCpf(input);
