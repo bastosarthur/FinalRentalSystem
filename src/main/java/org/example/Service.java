@@ -145,17 +145,20 @@ public class Service {
                 carList.add(car);
                 sumPrice = sumPrice.add(car.getDailyRate());
             }
-            long totalDays = ChronoUnit.DAYS.between(initialDate, returnDate);
-            BigDecimal totalPrice = sumPrice.multiply(BigDecimal.valueOf(totalDays));
+            long billableDays = ChronoUnit.DAYS.between(initialDate, returnDate);
+            if (billableDays == 0) {
+                billableDays = 1;
+            }
+            BigDecimal totalPrice = sumPrice.multiply(BigDecimal.valueOf(billableDays));
             LocalDate currentDate = LocalDate.now();
             if (initialDate.isBefore(currentDate)) {
                 return -3; // INVALID RENTAL DATE;
             }
             String status;
             if (initialDate.isEqual(LocalDate.now())) {
-                status = "active";
+                status = "ACTIVE";
             } else {
-                status = "reserved";
+                status = "RESERVED";
             }
             Rental rental = new Rental(customer, carList, initialDate, returnDate, totalPrice, status);
             Transaction transaction = session.beginTransaction();
@@ -201,6 +204,12 @@ public class Service {
             if (rental == null) {
                 return -1; // RENTAL NOT FOUND
             }
+            if (rental.getStatus().equalsIgnoreCase("CANCELED")) {
+                return -2; // RENTAL ALREADY CANCELED.
+            }
+            if (rental.getStatus().equalsIgnoreCase("COMPLETED")) {
+                return -3; // RENTAL ALREADY COMPLETED, CANT BE CANCELED.
+            }
             Transaction transaction = session.beginTransaction();
             try {
                 Customer customer = rental.getCustomer();
@@ -208,9 +217,42 @@ public class Service {
                 for (Car car : rental.getCarList()) {
                     car.setActiveRental(null);
                 }
-                rental.changeStatus("canceled");
+                rental.changeStatus("CANCELED");
                 transaction.commit();
                 return 1; // SUCCESS
+            } catch (RuntimeException exception) {
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
+                throw exception;
+            }
+        }
+    }
+
+    public int completeRental(int rentalId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Rental rental = rentalDAO.findRental(session, rentalId);
+            if (rental == null) {
+                return -1; // RENTAL NOT FOUND;
+            }
+            if (!rental.getStatus().equalsIgnoreCase("ACTIVE")) {
+                return -2; // RENTAL NOT ACTIVE, MUST BE ACTIVE RENTAL TO BE COMPLETED.
+            }
+            if (!rental.getReturnDate().equals(LocalDate.now())) {
+                return -3; // NOT THE RENTAL RETURN DATE, PLEASE CHANGE THE RETURN DATE AND ADJUST PRICE BEFORE COMPLETING
+            }
+            Transaction transaction = session.beginTransaction();
+            try {
+                Customer customer = rental.getCustomer();
+                List<Car> carList = rental.getCarList();
+                customer.setActiveRental(null);
+                for (Car car : carList) {
+                    car.setActiveRental(null);
+                }
+                rental.changeStatus("COMPLETED");
+                session.flush();
+                transaction.commit();
+                return 1;
             } catch (RuntimeException exception) {
                 if (transaction.isActive()) {
                     transaction.rollback();
@@ -253,7 +295,7 @@ public class Service {
 
     public List<Rental> rentalsByStatus(String status) {
         if (!status.equalsIgnoreCase("active") && !status.equalsIgnoreCase("canceled")
-        && !status.equalsIgnoreCase("reserved")) {
+        && !status.equalsIgnoreCase("reserved") && !status.equalsIgnoreCase("completed")) {
             return null;
         }
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -294,6 +336,46 @@ public class Service {
     public Long countRentalsByStatus(String status) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return rentalDAO.countRentalByStatus(session, status);
+        }
+    }
+
+    public int changeReturnDate(int rentalId, LocalDate newDate) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Rental rental = rentalDAO.findRental(session, rentalId);
+            if (rental == null) {
+                return -1; // RENTAL NOT FOUND
+            }
+            if (rental.getStatus().equalsIgnoreCase("CANCELED") ||
+                    rental.getStatus().equalsIgnoreCase("COMPLETED")) {
+                return -2; // CANT CHANGE RETURN DATE OF CANCELED OF COMPLETED RENTALS;
+            }
+            if (rental.getReturnDate().isEqual(newDate)) {
+                return -3; // SAME RETURN DATES;
+            }
+            Transaction transaction = session.beginTransaction();
+            try {
+                rental.changeReturnDate(newDate);
+                session.flush();
+                List<Car> carList = rental.getCarList();
+                BigDecimal newPrice = BigDecimal.ZERO;
+                for (Car car : carList) {
+                    newPrice = newPrice.add(car.getDailyRate());
+                }
+                long newBillableDays = rental.getTotalDays();
+                if (newBillableDays == 0) {
+                    newBillableDays = 1;
+                }
+                BigDecimal newTotalPrice = newPrice.multiply(BigDecimal.valueOf(newBillableDays));
+                rental.changeTotalPrice(newTotalPrice);
+                session.flush();
+                transaction.commit();
+                return rental.getRentalId();
+            } catch (RuntimeException exception) {
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
+                throw exception;
+            }
         }
     }
 

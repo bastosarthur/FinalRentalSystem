@@ -162,10 +162,11 @@ public class InputValidation {
         while (true) {
             String status = input.nextLine();
             if (status.equalsIgnoreCase("active") || status.equalsIgnoreCase("reserved")
-                || status.equalsIgnoreCase("canceled")) {
-                return status;
+                || status.equalsIgnoreCase("canceled")
+                    || status.equalsIgnoreCase("completed")) {
+                return status.toUpperCase();
             }
-            System.out.print("Please type a valid status (active, reserved or canceled): ");
+            System.out.print("Please type a valid status ('active', 'completed', 'reserved' or 'canceled'): ");
         }
     }
 

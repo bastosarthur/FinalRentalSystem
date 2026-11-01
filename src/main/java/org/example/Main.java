@@ -181,6 +181,14 @@ public class Main {
                 System.out.println("\nError. Rental not found.");
                 return;
             }
+            if (success == -2) {
+                System.out.println("\nError. Rental had already been canceled.");
+                return;
+            }
+            if (success == -3) {
+                System.out.println("\nError. Rental already completed.");
+                return;
+            }
             if (success == 1) {
                 System.out.println("\nRental successfully canceled.");
                 return;
@@ -332,7 +340,7 @@ public class Main {
     }
 
     public void rentalsByStatus(Scanner input) {
-        System.out.print("\n\nSearching rentals by status.\nStatus (active, reserved, canceled): ");
+        System.out.print("\n\nSearching rentals by status.\nStatus ('active', 'completed', 'reserved', 'canceled'): ");
         String status = validation.getStatus(input);
         try {
             List<Rental> rentalByStatus = service.rentalsByStatus(status);
@@ -422,6 +430,64 @@ public class Main {
         }
     }
 
+    public void completeRental(Scanner input) {
+        System.out.print("\n\nCompleting a rental and returning the cars.\nRental ID: ");
+        int rentalId = validation.getRentalId(input);
+        try {
+            int success = service.completeRental(rentalId);
+            switch (success) {
+                case -1 -> System.out.println("\nRental not found.");
+                case -2 -> System.out.println("\nRental not ACTIVE. Can`t be canceled.");
+                case -3 -> System.out.println("""
+                Today is not the Rental's return date.
+                Please change the Rental's return date and adjust the total price before confirming its completion.""");
+                case 1 -> System.out.println("\nRental completed and all cars returned.");
+                default -> System.out.println("\nError. Please try again.");
+            }
+            /*
+            if (success == -1) {
+                System.out.println("\nRental not found.");
+                return;
+            }
+            if (success == -2) {
+                System.out.println("\nRental not ACTIVE. Can`t be canceled.");
+                return;
+            }
+            if (success == -3) {
+
+            }
+            if (success == 1) {
+                System.out.println("\nRental completed and all cars returned.");
+                return;
+            }
+            */
+
+        } catch (RuntimeException exception) {
+            System.out.println("\nError: " + exception.getMessage());
+            System.out.println("Please try again.");
+        }
+    }
+
+    public void changeReturnDate(Scanner input) {
+        System.out.print("\n\nChanging a Rental's return date.\nRental ID: ");
+        int rentalId = validation.getRentalId(input);
+        System.out.print("New return date: ");
+        LocalDate newReturnDate = validation.getReturnDate(input);
+        try {
+            int success = service.changeReturnDate(rentalId, newReturnDate);
+            switch (success) {
+                case -1 -> System.out.println("\nError. Rental not found.");
+                case -2 -> System.out.println("\nError. Can't change return dates of COMPLETED or CANCELED Rentals.");
+                case -3 -> System.out.println("\nError. Same return date as the Rental currently has.");
+                default -> System.out.println("\nNew return date successfully changed.\n" +
+                        "Check adjusted price on the rental ID: " + success);
+            }
+        } catch (RuntimeException exception) {
+            System.out.println("\nError: " + exception.getMessage());
+            System.out.println("Please try again.");
+        }
+    }
+
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         Main main = new Main();
@@ -429,9 +495,11 @@ public class Main {
         //main.registerFeature(input);
         //main.registerCustomer(input);
         //main.registerCar(input);
-        //main.registerRental(input);
 
+        //main.registerRental(input);
         //main.cancelRental(input);
+        //main.completeRental(input);
+        //main.changeReturnDate(input);
 
         //Customer customer = main.searchCustomer(input);
         //main.searchCar(input);
@@ -444,12 +512,13 @@ public class Main {
         //main.rentalsByReturnDate(input);
         //main.activeRentals(input);
         //main.canceledRentals();
-        //main.rentalsByStatus(input);
+        main.rentalsByStatus(input);
         //main.avgRentalPrice();
         //main.rentalCount();
         //main.rentalsByCpf(input);
         //main.rentalsByName(input);
         //main.rentalsByPrice();
-        main.countRentalsByStatus(input);
+        //main.countRentalsByStatus(input);
+
     }
 }

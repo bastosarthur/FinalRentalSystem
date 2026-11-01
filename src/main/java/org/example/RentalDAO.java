@@ -53,7 +53,7 @@ public class RentalDAO {
                         WHERE status = :status
                         ORDER BY rentalId
                         """, Rental.class)
-                        .setParameter("status", status.toLowerCase())
+                        .setParameter("status", status.toUpperCase())
                         .getResultList();
     }
 
@@ -107,7 +107,7 @@ public class RentalDAO {
                         FROM Rental
                         WHERE status = :status
                         """, Long.class)
-                        .setParameter("status", status.toLowerCase())
+                        .setParameter("status", status.toUpperCase())
                         .getSingleResult();
     }
 

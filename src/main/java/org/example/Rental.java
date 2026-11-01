@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.math.BigDecimal;
-import java.util.Date;
 
 
 @Entity
@@ -31,7 +30,7 @@ public class Rental {
     private LocalDate returnDate;
 
     @Generated(event = {EventType.INSERT, EventType.UPDATE})
-    @Column(name = "total_days", nullable = false, insertable = false, updatable = false)
+    @Column(name = "total_days", nullable = false, insertable = true, updatable = true)
     private int totalDays;
 
     @Column(name = "total_price", nullable = false, updatable = true)
@@ -121,5 +120,9 @@ public class Rental {
 
     public void setCarList(List<Car> carList) {
         this.carList = carList;
+    }
+
+    public void setReturnDate(LocalDate newReturnDate) {
+        this.returnDate = newReturnDate;
     }
 }
