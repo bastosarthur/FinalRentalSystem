@@ -47,24 +47,6 @@ public class RentalDAO {
                         .getResultList();
     }
 
-    public List<Rental> activeRentals(Session session) {
-        return session.createQuery("""
-                        FROM Rental
-                        WHERE status = "active"
-                        ORDER BY rentalId
-                        """, Rental.class)
-                        .getResultList();
-    }
-
-    public List<Rental> canceledRentals(Session session) {
-        return session.createQuery("""
-                        FROM Rental
-                        WHERE status = "canceled"
-                        ORDER BY rentalId
-                        """, Rental.class)
-                        .getResultList();
-    }
-
     public List<Rental> rentalByStatus(Session session, String status) {
         return session.createQuery("""
                         FROM Rental
@@ -88,6 +70,44 @@ public class RentalDAO {
                         SELECT COUNT(*)
                         FROM Rental
                         """, Long.class)
+                .getSingleResult();
+    }
+
+    public List<Rental> findRentalsByCpf(Session session, String cpf) {
+        return session.createQuery("""
+                        FROM Rental
+                        WHERE customer.cpf = :cpf
+                        ORDER BY rentalId
+                        """, Rental.class)
+                .setParameter("cpf", cpf)
+                .getResultList();
+    }
+
+    public List<Rental> findRentalsByName(Session session, String name) {
+        return session.createQuery("""
+                        FROM Rental
+                        WHERE LOWER(customer.name) LIKE :name
+                        ORDER BY rentalId
+                        """, Rental.class)
+                        .setParameter("name", "%" + name.toLowerCase() + "%")
+                        .getResultList();
+    }
+
+    public List<Rental> rentalsByPrice(Session session) {
+        return session.createQuery("""
+                        FROM Rental
+                        ORDER BY totalPrice
+                        """, Rental.class)
+                        .getResultList();
+    }
+
+    public Long countRentalByStatus(Session session, String status) {
+        return session.createQuery("""
+                        SELECT COUNT(*)
+                        FROM Rental
+                        WHERE status = :status
+                        """, Long.class)
+                        .setParameter("status", status.toLowerCase())
                         .getSingleResult();
     }
 

@@ -250,17 +250,6 @@ public class Service {
         }
     }
 
-    public List<Rental> activeRentals() {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return rentalDAO.activeRentals(session);
-        }
-    }
-
-    public List<Rental> canceledRentals() {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return rentalDAO.canceledRentals(session);
-        }
-    }
 
     public List<Rental> rentalsByStatus(String status) {
         if (!status.equalsIgnoreCase("active") && !status.equalsIgnoreCase("canceled")
@@ -283,4 +272,42 @@ public class Service {
             return rentalDAO.rentalCount(session);
         }
     }
+
+    public List<Rental> rentalsByCpf(String cpf) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return rentalDAO.findRentalsByCpf(session, cpf);
+        }
+    }
+
+    public List<Rental> rentalsByName(String name) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return rentalDAO.findRentalsByName(session, name);
+        }
+    }
+
+    public List<Rental> rentalsByPrice() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return rentalDAO.rentalsByPrice(session);
+        }
+    }
+
+    public Long countRentalsByStatus(String status) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return rentalDAO.countRentalByStatus(session, status);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

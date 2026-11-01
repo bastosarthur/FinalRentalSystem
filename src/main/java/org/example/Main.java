@@ -331,34 +331,6 @@ public class Main {
         }
     }
 
-    public void activeRentals(Scanner input) {
-        try {
-            List<Rental> activeRentals = service.activeRentals();
-            if (activeRentals.isEmpty()) {
-                System.out.println("\nNo active rentals at the moment.");
-                return;
-            }
-            activeRentals.forEach(System.out::print);
-        } catch (RuntimeException exception) {
-            System.out.println("\nError: " + exception.getMessage());
-            System.out.println("Please try again.");
-        }
-    }
-
-    public void canceledRentals() {
-        try {
-            List<Rental> canceledRentals = service.canceledRentals();
-            if (canceledRentals.isEmpty()) {
-                System.out.println("\nNo canceled rentals ever. NOT VERY LIKELY HAHA");
-                return;
-            }
-            canceledRentals.forEach(System.out::print);
-        } catch (RuntimeException exception) {
-            System.out.println("\nError: " + exception.getMessage());
-            System.out.println("Please try again.");
-        }
-    }
-
     public void rentalsByStatus(Scanner input) {
         System.out.print("\n\nSearching rentals by status.\nStatus (active, reserved, canceled): ");
         String status = validation.getStatus(input);
@@ -395,6 +367,61 @@ public class Main {
         }
     }
 
+    public void rentalsByCpf(Scanner input) {
+        System.out.print("\n\nSearching rentals by CPF.\nCustomer CPF: ");
+        String cpf = validation.getCpf(input);
+        try {
+            List<Rental> rentalsByCpf = service.rentalsByCpf(cpf);
+            if (rentalsByCpf.isEmpty()) {
+                System.out.println("\nNo rentals found for this CPF.");
+                return;
+            }
+            rentalsByCpf.forEach(System.out::print);
+        } catch (RuntimeException exception) {
+            System.out.println("\nError: " + exception.getMessage());
+            System.out.println("Please try again.");
+        }
+    }
+
+    public void rentalsByName(Scanner input) {
+        System.out.print("\n\nSearching Rentals by a customer's name.\nFull or partial name: ");
+        String tryName = input.nextLine();
+        try {
+            List<Rental> rentalsByName = service.rentalsByName(tryName);
+            if (rentalsByName.isEmpty()) {
+                System.out.println("\nNo rentals found for this customer.");
+                return;
+            }
+            rentalsByName.forEach(System.out::print);
+        } catch (RuntimeException exception) {
+            System.out.println("\nError: " + exception.getMessage());
+            System.out.println("Please try again.");
+        }
+    }
+
+    public void rentalsByPrice() {
+        try {
+            System.out.print("\n\nRentals ordered by price: ");
+            List<Rental> rentalsByPrice = service.rentalsByPrice();
+            rentalsByPrice.forEach(System.out::print);
+        } catch (RuntimeException exception) {
+            System.out.println("\nError: " + exception.getMessage());
+            System.out.println("Please try again.");
+        }
+    }
+
+    public void countRentalsByStatus(Scanner input) {
+        System.out.print("\n\nNumber of rental by status.\nStatus ('active', 'reserved, 'canceled'): ");
+        String status = validation.getStatus(input);
+        try {
+            long count = service.countRentalsByStatus(status);
+            System.out.println("\nThere are " + count + " " + status.toUpperCase() + " rentals in our system.");
+        } catch (RuntimeException exception) {
+            System.out.println("\nError: " + exception.getMessage());
+            System.out.println("Please try again.");
+        }
+    }
+
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         Main main = new Main();
@@ -419,7 +446,10 @@ public class Main {
         //main.canceledRentals();
         //main.rentalsByStatus(input);
         //main.avgRentalPrice();
-        main.rentalCount();
-
+        //main.rentalCount();
+        //main.rentalsByCpf(input);
+        //main.rentalsByName(input);
+        //main.rentalsByPrice();
+        main.countRentalsByStatus(input);
     }
 }
