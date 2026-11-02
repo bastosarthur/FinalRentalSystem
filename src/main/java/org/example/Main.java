@@ -9,8 +9,8 @@ import java.time.LocalDate;
 
 public class Main {
 
-    Service service = new Service();
-    InputValidation validation = new InputValidation();
+    final static Service service = new Service();
+    final static InputValidation validation = new InputValidation();
 
     public void featuresMenu() {
         System.out.println("\nAvailable Features:");
@@ -33,7 +33,7 @@ public class Main {
     }
 
     public void registerCar(Scanner input) {
-        System.out.print("\n\nCar Plate: ");
+        System.out.print("\nCar Plate: ");
         String plate = validation.getPlate(input);
         System.out.print("Brand: ");
         String brand = validation.getBrand(input);
@@ -69,7 +69,7 @@ public class Main {
     }
 
     public void registerCustomer(Scanner input) {
-        System.out.print("\n\nCustomer's CPF: ");
+        System.out.print("\nCustomer's CPF: ");
         String cpf = validation.getCpf(input);
         System.out.print("First and Last name: ");
         String name = validation.getName(input);
@@ -120,26 +120,23 @@ public class Main {
         }
     }
 
-    public Customer searchCustomer(Scanner input) {
-        System.out.print("\n\nCustomer's CPF: ");
+    public void searchCustomer(Scanner input) {
+        System.out.print("\nCustomer's CPF: ");
         String cpf = validation.getCpf(input);
         try {
             Customer customer = service.searchCustomer(cpf);
             if (customer == null) {
                 System.out.println("\nCustomer not found.");
-                return null;
             }
             System.out.println(customer);
-            return customer;
         } catch (RuntimeException exception) {
             System.out.println("\nError: " + exception.getMessage());
             System.out.println("Please try again.");
         }
-        return null;
     }
 
     public void registerRental(Scanner input) {
-        System.out.print("\n\nCustomer CPF: ");
+        System.out.print("\nCustomer CPF: ");
         String cpf = validation.getCpf(input);
         System.out.print("Initial date (MM/dd/yyyy): ");
         LocalDate initialDate = validation.getInitialDate(input);
@@ -172,7 +169,7 @@ public class Main {
     }
 
     public void cancelRental(Scanner input) {
-        System.out.print("\n\nRental ID: ");
+        System.out.print("\nRental ID: ");
         int rentalId = validation.getRentalId(input);
         try {
             int success = service.cancelRental(rentalId);
@@ -198,30 +195,27 @@ public class Main {
         }
     }
 
-    public Car searchCar(Scanner input) {
+    public void searchCar(Scanner input) {
         System.out.print("\n\nSearching a car.\nCar plate: ");
         String plate = validation.getPlate(input);
         try {
             Car car = service.searchCar(plate);
             if (car == null) {
                 System.out.println("\nCar not found.");
-                return null;
             }
             System.out.println(car);
             List<Feature> carFeatures = car.getCarFeatures();
             System.out.println("Features: ");
             carFeatures.forEach(System.out::print);
             System.out.println();
-            return car;
         } catch (RuntimeException exception) {
             System.out.println("\nError: " + exception.getMessage());
             System.out.println("Please try again.");
         }
-        return null;
     }
 
     public void customerRentalHistory(Scanner input) {
-        System.out.print("\n\nCustomer CPF: ");
+        System.out.print("\nCustomer CPF: ");
         String cpf = validation.getCpf(input);
         try {
             Customer customer = service.searchCustomer(cpf);
@@ -247,7 +241,7 @@ public class Main {
     }
 
     public void carRentalHistory(Scanner input) {
-        System.out.print("\n\nCar Plate: ");
+        System.out.print("\nCar Plate: ");
         String plate = validation.getPlate(input);
         try {
             Car car = service.searchCar(plate);
@@ -272,7 +266,7 @@ public class Main {
     }
 
     public void searchRental(Scanner input) {
-        System.out.print("\n\nRental ID: ");
+        System.out.print("\nRental ID: ");
         int rentalId = validation.getRentalId(input);
         try {
             Rental rental = service.searchRental(rentalId);
@@ -307,7 +301,7 @@ public class Main {
     }
 
     public void rentalsByInitialDate(Scanner input) {
-        System.out.print("\n\nSearching rental by initial date.\nInitial date: ");
+        System.out.print("\nSearching rental by initial date.\nInitial date: ");
         LocalDate initialDate = validation.getInitialDate(input);
         try {
             List<Rental> rentalsByInitialDate = service.rentalByInitialDate(initialDate);
@@ -323,7 +317,7 @@ public class Main {
     }
 
     public void rentalsByReturnDate(Scanner input) {
-        System.out.print("\n\nSearching rentals by return date.\nReturn date: ");
+        System.out.print("\nSearching rentals by return date.\nReturn date: ");
         LocalDate returnDate = validation.getReturnDate(input);
         try {
             List<Rental> rentalsByReturnDate = service.rentalByReturnDate(returnDate);
@@ -339,7 +333,7 @@ public class Main {
     }
 
     public void rentalsByStatus(Scanner input) {
-        System.out.print("\n\nSearching rentals by status.\nStatus ('active', 'completed', 'reserved', 'canceled'): ");
+        System.out.print("\nSearching rentals by status.\nStatus ('active', 'completed', 'reserved', 'canceled'): ");
         String status = validation.getStatus(input);
         try {
             List<Rental> rentalByStatus = service.rentalsByStatus(status);
@@ -357,7 +351,7 @@ public class Main {
     public void avgRentalPrice() {
         try {
             Double avgRentalPrice = service.avgRentalPrice();
-            System.out.print("\n\nAverage Rental Price in our company: %.2f".formatted(avgRentalPrice));
+            System.out.println("\nAverage Rental Price in our company: %.2f".formatted(avgRentalPrice));
         } catch (RuntimeException exception) {
             System.out.println("\nError: " + exception.getMessage());
             System.out.println("Please try again.");
@@ -367,7 +361,7 @@ public class Main {
     public void rentalCount() {
         try {
             Long rentalCount = service.rentalCount();
-            System.out.println("\n\nTotal number of rentals: " + rentalCount);
+            System.out.println("\nTotal number of rentals: " + rentalCount);
         } catch (RuntimeException exception) {
             System.out.println("\nError: " + exception.getMessage());
             System.out.println("Please try again.");
@@ -375,7 +369,7 @@ public class Main {
     }
 
     public void rentalsByCpf(Scanner input) {
-        System.out.print("\n\nSearching rentals by CPF.\nCustomer CPF: ");
+        System.out.print("\nSearching rentals by CPF.\nCustomer CPF: ");
         String cpf = validation.getCpf(input);
         try {
             List<Rental> rentalsByCpf = service.rentalsByCpf(cpf);
@@ -391,7 +385,7 @@ public class Main {
     }
 
     public void rentalsByName(Scanner input) {
-        System.out.print("\n\nSearching Rentals by a customer's name.\nFull or partial name: ");
+        System.out.print("\nSearching Rentals by a customer's name.\nFull or partial name: ");
         String tryName = input.nextLine();
         try {
             List<Rental> rentalsByName = service.rentalsByName(tryName);
@@ -408,9 +402,10 @@ public class Main {
 
     public void rentalsByPrice() {
         try {
-            System.out.print("\n\nRentals ordered by price: ");
+            System.out.print("\nRentals ordered by price: ");
             List<Rental> rentalsByPrice = service.rentalsByPrice();
             rentalsByPrice.forEach(System.out::print);
+            System.out.println();
         } catch (RuntimeException exception) {
             System.out.println("\nError: " + exception.getMessage());
             System.out.println("Please try again.");
@@ -418,7 +413,7 @@ public class Main {
     }
 
     public void countRentalsByStatus(Scanner input) {
-        System.out.print("\n\nNumber of rental by status.\nStatus ('active', 'completed, 'reserved, 'canceled'): ");
+        System.out.print("\nNumber of rental by status.\nStatus ('active', 'completed, 'reserved, 'canceled'): ");
         String status = validation.getStatus(input);
         try {
             long count = service.countRentalsByStatus(status);
@@ -430,7 +425,7 @@ public class Main {
     }
 
     public void completeRental(Scanner input) {
-        System.out.print("\n\nCompleting a rental and returning the cars.\nRental ID: ");
+        System.out.print("\nCompleting a rental and returning the cars.\nRental ID: ");
         int rentalId = validation.getRentalId(input);
         try {
             int success = service.completeRental(rentalId);
@@ -438,29 +433,11 @@ public class Main {
                 case -1 -> System.out.println("\nRental not found.");
                 case -2 -> System.out.println("\nRental not ACTIVE. Can`t be canceled.");
                 case -3 -> System.out.println("""
-                Today is not the Rental's return date.
-                Please change the Rental's return date and adjust the total price before confirming its completion.""");
+                        Today is not the Rental's return date.
+                        Please change the Rental's return date and adjust the total price before confirming its completion.""");
                 case 1 -> System.out.println("\nRental completed and all cars returned.");
                 default -> System.out.println("\nError. Please try again.");
             }
-            /*
-            if (success == -1) {
-                System.out.println("\nRental not found.");
-                return;
-            }
-            if (success == -2) {
-                System.out.println("\nRental not ACTIVE. Can`t be canceled.");
-                return;
-            }
-            if (success == -3) {
-
-            }
-            if (success == 1) {
-                System.out.println("\nRental completed and all cars returned.");
-                return;
-            }
-            */
-
         } catch (RuntimeException exception) {
             System.out.println("\nError: " + exception.getMessage());
             System.out.println("Please try again.");
@@ -468,7 +445,7 @@ public class Main {
     }
 
     public void changeReturnDate(Scanner input) {
-        System.out.print("\n\nChanging a Rental's return date.\nRental ID: ");
+        System.out.print("\nChanging a Rental's return date.\nRental ID: ");
         int rentalId = validation.getRentalId(input);
         System.out.print("New return date: ");
         LocalDate newReturnDate = validation.getReturnDate(input);
@@ -488,7 +465,7 @@ public class Main {
     }
 
     public void avgRentalPriceByCustomer(Scanner input) {
-        System.out.print("\n\nAverage rental price by customer.\nCustomer CPF: ");
+        System.out.print("\nAverage rental price by customer.\nCustomer CPF: ");
         String cpf = validation.getCpf(input);
         try {
             BigDecimal avg = service.avgRentalPriceByCustomer(cpf);
@@ -506,7 +483,7 @@ public class Main {
     public void avgRentalDays() {
         try {
             Double avgRentalDays = service.avgRentalDays();
-            System.out.println("\n\nAverage rental days in our company: %.1f".formatted(avgRentalDays));
+            System.out.println("\nAverage rental days in our company: %.1f".formatted(avgRentalDays));
         } catch (RuntimeException exception) {
             System.out.println("\nError: " + exception.getMessage());
             System.out.println("Please try again.");
@@ -514,7 +491,7 @@ public class Main {
     }
 
     public void avgRentalDaysByCustomer(Scanner input) {
-        System.out.print("\n\nAverage rental days by customer.\nCustomer CPF: ");
+        System.out.print("\nAverage rental days by customer.\nCustomer CPF: ");
         String cpf = validation.getCpf(input);
         try {
             Double avgRentalDays = service.avgRentalDaysByCustomer(cpf);
@@ -535,9 +512,239 @@ public class Main {
         }
     }
 
+    public void initialMenu() {
+        System.out.println("""
+                ====================================
+                       CAR RENTAL MANAGEMENT
+                ====================================
+                
+                1. Car Management
+                2. Customer Management
+                3. Rental Management
+                4. Rental Reports & Statistics
+                0. Exit""");
+        System.out.print("\nChoose an option: ");
+    }
+
+    public void carMenu() {
+        System.out.println("""
+                ====================================
+                           CAR MANAGEMENT
+                ====================================
+    
+                1. Register Car
+                2. Search Car
+                3. Car Rental History
+                4. Register New Feature
+                0. Back""");
+        System.out.print("\nChoose an option: ");
+    }
+
+    public void customerMenu() {
+        System.out.println("""
+                ====================================
+                        CUSTOMER MANAGEMENT
+                ====================================
+                
+                1. Register Customer
+                2. Search Customer
+                3. Customer Rental History
+                0. Back""");
+        System.out.print("\nChoose an option: ");
+    }
+
+    public void rentalMenu() {
+        System.out.println("""
+                ====================================
+                          RENTAL MANAGEMENT
+                ====================================
+                
+                1. Register Rental
+                2. Search Rental
+                3. Cancel Rental
+                4. Complete Rental
+                5. Change Return Date
+                0. Back""");
+        System.out.print("\nChoose an option: ");
+    }
+
+    public void rentalReportsMenu() {
+        System.out.println("""
+                ====================================
+                       RENTAL REPORTS & STATS
+                ====================================
+                
+                1. Search Rentals
+                2. Rental Statistics
+                3. Customer Statistics
+                0. Back""");
+        System.out.print("\nChoose an option: ");
+    }
+
+    public void searchRentalsMenu() {
+        System.out.println("""
+                ====================================
+                           SEARCH RENTALS
+                ====================================
+                
+                1. Search by Rental ID
+                2. Search by Date
+                3. Search by Initial Date
+                4. Search by Return Date
+                5. Search by Status
+                6. Search by Customer CPF
+                7. Search by Customer Name
+                8. List Rentals by Price
+                0. Back
+                """);
+        System.out.print("\nChoose an option: ");
+    }
+
+    public void rentalsStatisticsMenu() {
+        System.out.println("""
+                ====================================
+                         RENTAL STATISTICS
+                ====================================
+                
+                1. Total Number of Rentals
+                2. Average Rental Price
+                3. Average Rental Duration
+                4. Count Rentals by Status
+                0. Back
+                """);
+        System.out.print("\nChoose an option: ");
+    }
+
+    public void customerStatisticsMenu() {
+        System.out.println("""
+                ====================================
+                        CUSTOMER STATISTICS
+                ====================================
+                
+                1. Average Rental Price by Customer
+                2. Average Rental Duration by Customer
+                0. Back""");
+        System.out.print("\nChoose an option: ");
+    }
+
+
+
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         Main main = new Main();
+
+        boolean exit = false;
+        while (!exit) {
+            main.initialMenu();
+            int firstMenu = validation.getMenuOptions(input);
+            switch (firstMenu) {
+                case 1 -> {
+                    int carMenu = -1;
+                    while (carMenu != 0) {
+                        main.carMenu();
+                        carMenu = validation.getMenuOptions(input);
+
+                        switch (carMenu) {
+                            case 1 -> main.registerCar(input);
+                            case 2 -> main.searchCar(input);
+                            case 3 -> main.carRentalHistory(input);
+                            case 4 -> main.registerFeature(input);
+                            case 0 -> System.out.println("\nReturning to the previous menu.");
+                            default -> System.out.print("\nInvalid option.");
+                        }
+                    }
+                }
+                case 2 -> {
+                    int customerMenu = -1;
+                    while (customerMenu != 0) {
+                        main.customerMenu();
+                        customerMenu = validation.getMenuOptions(input);
+                        switch (customerMenu) {
+                            case 1 -> main.registerCustomer(input);
+                            case 2 -> main.searchCustomer(input);
+                            case 3 -> main.customerRentalHistory(input);
+                            case 0 -> System.out.println("\nReturning to the previous menu.");
+                            default -> System.out.print("\nInvalid option.");
+                        }
+                    }
+                }
+                case 3 -> {
+                    int rentalMenu = -1;
+                    while (rentalMenu != 0) {
+                        main.rentalMenu();
+                        rentalMenu = validation.getMenuOptions(input);
+                        switch (rentalMenu) {
+                            case 1 -> main.registerRental(input);
+                            case 2 -> main.searchRental(input);
+                            case 3 -> main.cancelRental(input);
+                            case 4 -> main.completeRental(input);
+                            case 5 -> main.changeReturnDate(input);
+                            case 0 -> System.out.println("\nReturning to the previous menu.");
+                            default -> System.out.print("\nInvalid option.");
+                        }
+                    }
+                }
+                case 4 -> {
+                    int reportsMenu = -1;
+                    while (reportsMenu != 0) {
+                        main.rentalReportsMenu();
+                        reportsMenu = validation.getMenuOptions(input);
+                        switch (reportsMenu) {
+                            case 1 -> {
+                                int searchRentalsMenu = -1;
+                                while (searchRentalsMenu != 0) {
+                                    main.searchRentalsMenu();
+                                    searchRentalsMenu = validation.getMenuOptions(input);
+                                    switch (searchRentalsMenu) {
+                                        case 1 -> main.searchRental(input);
+                                        case 2 -> main.searchRentalByDate(input);
+                                        case 3 -> main.rentalsByInitialDate(input);
+                                        case 4 -> main.rentalsByReturnDate(input);
+                                        case 5 -> main.rentalsByStatus(input);
+                                        case 6 -> main.rentalsByCpf(input);
+                                        case 7 -> main.rentalsByName(input);
+                                        case 8 -> main.rentalsByPrice();
+                                        case 0 -> System.out.println("\nReturning to the previous menu.");
+                                        default -> System.out.print("\nInvalid option.");
+                                    }
+                                }
+                            }
+                            case 2 -> {
+                                int rentalStatsMenu = -1;
+                                while (rentalStatsMenu != 0) {
+                                    main.rentalsStatisticsMenu();
+                                    rentalStatsMenu = validation.getMenuOptions(input);
+                                    switch (rentalStatsMenu) {
+                                        case 1 -> main.rentalCount();
+                                        case 2 -> main.avgRentalPrice();
+                                        case 3 -> main.avgRentalDays();
+                                        case 4 -> main.countRentalsByStatus(input);
+                                        case 0 -> System.out.println("\nReturning to the previous menu.");
+                                        default -> System.out.print("\nInvalid option.");
+                                    }
+                                }
+                            }
+                            case 3 -> {
+                                int customerStatsMenu = -1;
+                                while (customerStatsMenu != 0) {
+                                    main.customerStatisticsMenu();
+                                    customerStatsMenu = validation.getMenuOptions(input);
+                                    switch (customerStatsMenu) {
+                                        case 1 -> main.avgRentalPriceByCustomer(input);
+                                        case 2 -> main.avgRentalDaysByCustomer(input);
+                                        case 0 -> System.out.println("\nReturning to the previous menu.");
+                                        default -> System.out.print("\nInvalid option.");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                case 0 -> exit = true;
+            }
+        }
+        input.close();
+        HibernateUtil.getSessionFactory().close();
 
         //main.registerFeature(input);
         //main.registerCustomer(input);

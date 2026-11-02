@@ -15,11 +15,11 @@
         </property>
 
         <property name="hibernate.show_sql">
-            true
+            false
         </property>
 
         <property name="hibernate.format_sql">
-            true
+            false
         </property>
 
         <property name="hibernate.hbm2ddl.auto">
