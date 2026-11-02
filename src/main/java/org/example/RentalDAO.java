@@ -21,7 +21,7 @@ public class RentalDAO {
         return session.createQuery("""
                         FROM Rental
                         WHERE :date BETWEEN initialDate AND returnDate
-                        ORDER BY initialDate
+                        ORDER BY rentalId
                         """, Rental.class)
                         .setParameter("date", date)
                         .getResultList();
@@ -31,7 +31,7 @@ public class RentalDAO {
         return session.createQuery("""
                         FROM Rental
                         WHERE initialDate = :initialDale
-                        ORDER BY status DESC
+                        ORDER BY status DESC, rentalId
                         """, Rental.class)
                         .setParameter("initialDale", initialDate)
                         .getResultList();
@@ -41,7 +41,7 @@ public class RentalDAO {
         return session.createQuery("""
                         FROM Rental
                         WHERE returnDate = :returnDate
-                        ORDER BY status DESC
+                        ORDER BY status DESC, rentalId
                         """, Rental.class)
                         .setParameter("returnDate", returnDate)
                         .getResultList();
@@ -108,6 +108,34 @@ public class RentalDAO {
                         WHERE status = :status
                         """, Long.class)
                         .setParameter("status", status.toUpperCase())
+                        .getSingleResult();
+    }
+
+    public Double avgRentalPriceByCustomer(Session session, String cpf) {
+        return session.createQuery("""
+                        SELECT AVG(totalPrice)
+                        FROM Rental
+                        WHERE LOWER(customer) = :cpf
+                        """, Double.class)
+                        .setParameter("cpf", cpf.toLowerCase())
+                        .getSingleResult();
+    }
+
+    public Double avgRentalDaysByCustomer(Session session, String cpf) {
+        return session.createQuery("""
+                        SELECT AVG(totalDays)
+                        FROM Rental
+                        WHERE LOWER(customer) = :cpf
+                        """, Double.class)
+                        .setParameter("cpf", cpf.toLowerCase())
+                        .getSingleResult();
+    }
+
+    public Double avgRentalDays(Session session) {
+        return session.createQuery("""
+                        SELECT AVG(totalDays)
+                        FROM Rental
+                        """, Double.class)
                         .getSingleResult();
     }
 

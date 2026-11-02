@@ -14,9 +14,7 @@ public class Main {
 
     public void featuresMenu() {
         System.out.println("\nAvailable Features:");
-
         System.out.println("1. GPS");
-        System.out.println("2. GPS");
         System.out.println("6. Air Conditioner");
         System.out.println("7. Airbags (6)");
         System.out.println("8. Airbags (8)");
@@ -29,6 +27,7 @@ public class Main {
         System.out.println("15. Hybrid");
         System.out.println("16. 2x4");
         System.out.println("17. 4x4");
+        System.out.println("18. Auto-drive");
         System.out.println("0. EXIT");
         System.out.println("\nFeature ID: ");
     }
@@ -419,7 +418,7 @@ public class Main {
     }
 
     public void countRentalsByStatus(Scanner input) {
-        System.out.print("\n\nNumber of rental by status.\nStatus ('active', 'reserved, 'canceled'): ");
+        System.out.print("\n\nNumber of rental by status.\nStatus ('active', 'completed, 'reserved, 'canceled'): ");
         String status = validation.getStatus(input);
         try {
             long count = service.countRentalsByStatus(status);
@@ -488,6 +487,54 @@ public class Main {
         }
     }
 
+    public void avgRentalPriceByCustomer(Scanner input) {
+        System.out.print("\n\nAverage rental price by customer.\nCustomer CPF: ");
+        String cpf = validation.getCpf(input);
+        try {
+            BigDecimal avg = service.avgRentalPriceByCustomer(cpf);
+            if (avg == null) {
+                System.out.println("\nCustomer not found.");
+                return;
+            }
+            System.out.println("\nAverage rental price by this customer: %.2f".formatted(avg));
+        } catch (RuntimeException exception) {
+            System.out.println("\nError: " + exception.getMessage());
+            System.out.println("Please try again.");
+        }
+    }
+
+    public void avgRentalDays() {
+        try {
+            Double avgRentalDays = service.avgRentalDays();
+            System.out.println("\n\nAverage rental days in our company: %.1f".formatted(avgRentalDays));
+        } catch (RuntimeException exception) {
+            System.out.println("\nError: " + exception.getMessage());
+            System.out.println("Please try again.");
+        }
+    }
+
+    public void avgRentalDaysByCustomer(Scanner input) {
+        System.out.print("\n\nAverage rental days by customer.\nCustomer CPF: ");
+        String cpf = validation.getCpf(input);
+        try {
+            Double avgRentalDays = service.avgRentalDaysByCustomer(cpf);
+            if (avgRentalDays == -1.0) {
+                System.out.println("\nCustomer not found.");
+                return;
+            }
+            else if (avgRentalDays == 0.0) {
+                System.out.println("\nCustomer has never rented with us.");
+                return;
+            } else {
+                System.out.println("\nAverage rental days by this customer: %.1f".formatted(avgRentalDays));
+                return;
+            }
+        } catch (RuntimeException exception) {
+            System.out.println("\nError: " + exception.getMessage());
+            System.out.println("Please try again.");
+        }
+    }
+
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         Main main = new Main();
@@ -496,22 +543,22 @@ public class Main {
         //main.registerCustomer(input);
         //main.registerCar(input);
 
-        main.registerRental(input);
-        //main.cancelRental(input);
-        //main.completeRental(input);
+
+        //main.registerRental(input);
+        //main.searchRental(input);
         //main.changeReturnDate(input);
+        //main.searchRental(input);
+        //main.completeRental(input);
+        //main.cancelRental(input);
 
         //Customer customer = main.searchCustomer(input);
         //main.searchCar(input);
         //main.customerRentalHistory(input);
         //main.carRentalHistory(input);
-        //main.searchRental(input);
 
         //main.searchRentalByDate(input);
         //main.rentalsByInitialDate(input);
         //main.rentalsByReturnDate(input);
-        //main.activeRentals(input);
-        //main.canceledRentals();
         //main.rentalsByStatus(input);
         //main.avgRentalPrice();
         //main.rentalCount();
@@ -519,6 +566,9 @@ public class Main {
         //main.rentalsByName(input);
         //main.rentalsByPrice();
         //main.countRentalsByStatus(input);
+        //main.avgRentalPriceByCustomer(input);
+        //main.avgRentalDays();
+        //main.avgRentalDaysByCustomer(input);
 
     }
 }

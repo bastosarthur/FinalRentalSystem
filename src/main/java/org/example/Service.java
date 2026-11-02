@@ -375,6 +375,38 @@ public class Service {
         }
     }
 
+    public BigDecimal avgRentalPriceByCustomer(String cpf) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Customer customer = session.find(Customer.class, cpf);
+            if (customer == null) {
+                return null; // CUSTOMER NOT FOUND.
+            }
+            if (customer.getRentalHistory().isEmpty()) {
+                return BigDecimal.ZERO;
+            }
+            return BigDecimal.valueOf(rentalDAO.avgRentalPriceByCustomer(session, cpf));
+        }
+    }
+
+    public Double avgRentalDays() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return rentalDAO.avgRentalDays(session);
+        }
+    }
+
+    public Double avgRentalDaysByCustomer(String cpf) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Customer customer = session.find(Customer.class, cpf);
+            if (customer == null) {
+                return -1.0; // CUSTOMER NOT FOUND.
+            }
+            if (customer.getRentalHistory().isEmpty()) {
+                return 0.0; // CUSTOMER HAS NEVER RENTED
+            }
+            return rentalDAO.avgRentalDaysByCustomer(session, cpf);
+        }
+    }
+
 
 
 
