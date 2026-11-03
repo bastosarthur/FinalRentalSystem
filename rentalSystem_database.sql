@@ -62,10 +62,7 @@ create table if not exists cars
     active_rental integer,
     primary key (plate),
     constraint car_active_rental_fk
-        foreign key (active_rental) references rentals,
-    constraint valid_brands
-        check ((brand)::text = ANY
-               ((ARRAY ['mercedes'::character varying, 'bmw'::character varying, 'volvo'::character varying])::text[]))
+        foreign key (active_rental) references rentals
 );
 
 alter table cars
@@ -100,5 +97,4 @@ create table if not exists rental_cars
 
 alter table rental_cars
     owner to postgres;
-
 

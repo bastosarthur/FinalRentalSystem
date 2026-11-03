@@ -75,7 +75,7 @@ This project was developed as part of my journey toward becoming a backend devel
 The project follows a layered structure that separates user interaction, input validation, business logic, database operations, and entity mapping.
 
 ```text
-FinalRentalSystem/
+RentalSystem/
 ├── src/
 │   └── main/
 │       ├── java/
@@ -92,7 +92,7 @@ FinalRentalSystem/
 │       │           └── HibernateUtil.java
 │       └── resources/
 │           └── hibernate.cfg.xml
-├── rentalSystem_database
+├── rentalSystem_database.sql
 ├── pom.xml
 └── README.md
 ```
@@ -109,7 +109,7 @@ FinalRentalSystem/
 - **Feature:** Represents vehicle features and their associations with vehicles.
 - **HibernateUtil:** Configures and provides the application's Hibernate `SessionFactory`.
 - **hibernate.cfg.xml:** Contains Hibernate configuration settings.
-- **rentalSystem_database:** Contains the PostgreSQL database structure required to recreate the project schema.
+- **rentalSystem_database.sql:** Contains the PostgreSQL database structure required to recreate the project schema.
 
 ## Database Structure and Entity Relationships
 
@@ -195,8 +195,8 @@ Install the following:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/bastosarthur/FinalRentalSystem.git
-cd FinalRentalSystem
+git clone https://github.com/bastosarthur/RentalSystem.git
+cd RentalSystem
 ```
 
 ### 2. Create a PostgreSQL Database
@@ -213,12 +213,12 @@ You can use IntelliJ IDEA's PostgreSQL interface or another PostgreSQL client to
 
 ### 3. Import the Database Schema
 
-The repository contains the `rentalSystem_database` schema script.
+The repository contains the `rentalSystem_database.sql` schema script.
 
 Execute the script against the database you created:
 
 ```bash
-psql -U postgres -d projects -f rentalSystem_database
+psql -U postgres -d projects -f rentalSystem_database.sql
 ```
 
 Replace `postgres` with your PostgreSQL username if necessary.
@@ -226,7 +226,7 @@ Replace `postgres` with your PostgreSQL username if necessary.
 If `psql` is not available in your system's PATH, use its full installation path. For example, on Windows with PostgreSQL 17 installed in the default directory:
 
 ```powershell
-& "C:\Program Files\PostgreSQL\17\bin\psql.exe" -U postgres -d projects -f rentalSystem_database
+& "C:\Program Files\PostgreSQL\17\bin\psql.exe" -U postgres -d projects -f rentalSystem_database.sql
 ```
 
 The schema import creates the required database structure, including tables, relationships, and constraints.
@@ -380,7 +380,7 @@ Este projeto foi desenvolvido como parte da minha jornada para me tornar desenvo
 O projeto utiliza uma arquitetura em camadas para separar a interação com o usuário, validação de entradas, lógica de negócio, operações de banco de dados e mapeamento das entidades.
 
 ```text
-FinalRentalSystem/
+RentalSystem/
 ├── src/
 │   └── main/
 │       ├── java/
@@ -397,7 +397,7 @@ FinalRentalSystem/
 │       │           └── HibernateUtil.java
 │       └── resources/
 │           └── hibernate.cfg.xml
-├── rentalSystem_database
+├── rentalSystem_database.sql
 ├── pom.xml
 └── README.md
 ```
@@ -414,7 +414,7 @@ FinalRentalSystem/
 - **Feature:** Representa as características dos veículos e suas associações.
 - **HibernateUtil:** Configura e disponibiliza a `SessionFactory` do Hibernate.
 - **hibernate.cfg.xml:** Contém as configurações do Hibernate.
-- **rentalSystem_database:** Contém a estrutura PostgreSQL necessária para recriar o esquema do projeto.
+- **rentalSystem_database.sql:** Contém a estrutura PostgreSQL necessária para recriar o esquema do projeto.
 
 ## Estrutura do Banco de Dados e Relacionamentos entre Entidades
 
@@ -500,8 +500,8 @@ Instale os seguintes programas:
 ### 1. Clonar o Repositório
 
 ```bash
-git clone https://github.com/bastosarthur/FinalRentalSystem.git
-cd FinalRentalSystem
+git clone https://github.com/bastosarthur/RentalSystem.git
+cd RentalSystem
 ```
 
 ### 2. Criar um Banco de Dados PostgreSQL
@@ -518,12 +518,12 @@ Você pode utilizar a interface PostgreSQL do IntelliJ IDEA ou outro cliente Pos
 
 ### 3. Importar o Esquema do Banco de Dados
 
-O repositório contém o script de criação do esquema `rentalSystem_database`.
+O repositório contém o script de criação do esquema `rentalSystem_database.sql`.
 
 Execute o script no banco de dados criado:
 
 ```bash
-psql -U postgres -d projects -f rentalSystem_database
+psql -U postgres -d projects -f rentalSystem_database.sql
 ```
 
 Substitua `postgres` pelo seu usuário PostgreSQL, se necessário.
@@ -531,7 +531,7 @@ Substitua `postgres` pelo seu usuário PostgreSQL, se necessário.
 Caso o comando `psql` não esteja disponível no PATH do sistema, utilize o caminho completo da instalação. Por exemplo, no Windows com PostgreSQL 17 instalado no diretório padrão:
 
 ```powershell
-& "C:\Program Files\PostgreSQL\17\bin\psql.exe" -U postgres -d projects -f rentalSystem_database
+& "C:\Program Files\PostgreSQL\17\bin\psql.exe" -U postgres -d projects -f rentalSystem_database.sql
 ```
 
 A importação cria a estrutura necessária do banco, incluindo tabelas, relacionamentos e restrições.
