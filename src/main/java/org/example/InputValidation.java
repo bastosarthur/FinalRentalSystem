@@ -91,11 +91,10 @@ public class InputValidation {
     public String getBrand(Scanner input) {
         while (true) {
             String brand = input.nextLine();
-            if (brand.equalsIgnoreCase("mercedes") || brand.equalsIgnoreCase("bmw")
-                    || brand.equalsIgnoreCase("volvo")) {
+            if (brand.matches("^[A-Za-z0-9]{3,20}$")) {
                 return brand.toLowerCase();
             }
-            System.out.print("\nWe only work with 'mercedes', 'bmw' and 'volvo': ");
+            System.out.print("\nPlease type a valid brand name: ");
         }
 
     }

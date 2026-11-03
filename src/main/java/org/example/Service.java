@@ -34,17 +34,6 @@ public class Service {
                 carDAO.persistCar(session, car);
                 transaction.commit();
                 return 1; // SUCCESS
-            } catch (org.hibernate.exception.ConstraintViolationException exception) {
-                if ("valid_brands".equalsIgnoreCase(exception.getConstraintName())) {
-                    if (transaction.isActive()) {
-                        transaction.rollback();
-                    }
-                    throw exception;
-                }
-                if (transaction.isActive()) {
-                    transaction.rollback();
-                }
-                throw exception;
             } catch (RuntimeException exception) {
                 if (transaction.isActive()) {
                     transaction.rollback();
@@ -88,6 +77,74 @@ public class Service {
     public Customer searchCustomer(String cpf) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return customerDAO.findCustomer(session, cpf);
+        }
+    }
+
+    public int updateCustomerEmail(String cpf, String newEmail) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Customer customer = session.find(Customer.class, cpf);
+            if (customer == null) {
+                return -1; // CUSTOMER NOT FOUND
+            }
+            if (customer.getEmail().equals(newEmail)) {
+                return -2; // SAME EMAIL
+            }
+            Transaction transaction = session.beginTransaction();
+            try {
+                customer.setEmail(newEmail);
+                transaction.commit();
+                return 1; // SUCCESS
+            } catch (org.hibernate.exception.ConstraintViolationException exception) {
+                if ("unique_email".equalsIgnoreCase(exception.getConstraintName())) {
+                    if (transaction.isActive()) {
+                        transaction.rollback();
+                    }
+                    throw exception;
+                }
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
+                throw exception;
+            } catch (RuntimeException exception) {
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
+                throw exception;
+            }
+        }
+    }
+
+    public int updateCustomerPhone(String cpf, String newPhone) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Customer customer = session.find(Customer.class, cpf);
+            if (customer == null) {
+                return -1; // CUSTOMER NOT FOUND
+            }
+            if (customer.getPhone().equalsIgnoreCase(newPhone)) {
+                return -2; // SAME PHONE NUMBER
+            }
+            Transaction transaction = session.beginTransaction();
+            try {
+                customer.setPhone(newPhone);
+                transaction.commit();
+                return 1; // SUCCESS
+            } catch (org.hibernate.exception.ConstraintViolationException exception) {
+                if ("unique_phone".equalsIgnoreCase(exception.getConstraintName())) {
+                    if (transaction.isActive()) {
+                        transaction.rollback();
+                    }
+                    throw exception;
+                }
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
+                throw exception;
+            } catch (RuntimeException exception) {
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
+                throw exception;
+            }
         }
     }
 
@@ -263,6 +320,30 @@ public class Service {
     public Car searchCar(String plate) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return carDAO.findCar(session, plate);
+        }
+    }
+
+    // ONLY FOR NEW RENTALS, ALREADY ACTIVE / RESERVED RENTALS WILL KEEP THE SAME TOTAL PRICE;
+    public int updateDailyRate(String plate, BigDecimal newDailyRate) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Car car = session.find(Car.class, plate);
+            if (car == null) {
+                return -1; // CAR NOT FOUND
+            }
+            if (car.getDailyRate().compareTo(newDailyRate) == 0) {
+                return -2; // SAME DAILY RATE
+            }
+            Transaction transaction = session.beginTransaction();
+            try {
+                car.setNewDailyRate(newDailyRate);
+                transaction.commit();
+                return 1; // SUCCESS
+            } catch (RuntimeException exception) {
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
+                throw exception;
+            }
         }
     }
 

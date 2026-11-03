@@ -135,6 +135,56 @@ public class Main {
         }
     }
 
+    public void updateCustomerEmail(Scanner input) {
+        System.out.print("\nUpdating a customer's email.\nCustomer CPF: ");
+        String cpf = validation.getCpf(input);
+        try {
+            Customer customer = service.searchCustomer(cpf);
+            if (customer == null) {
+                System.out.println("\nCustomer not found.");
+                return;
+            }
+            System.out.println(customer);
+            System.out.print("Customer new email: ");
+            String newEmail = validation.getEmail(input);
+            int success = service.updateCustomerEmail(customer.getCpf(), newEmail);
+            switch (success) {
+                case -1 -> System.out.println("\nCustomer not found.");
+                case -2 -> System.out.println("\nError. New email needs to be different from current email.");
+                case 1 -> System.out.println("\nCustomer email updated successfully.");
+                default -> System.out.print("\nError. Please try again.");
+            }
+        } catch (RuntimeException exception) {
+            System.out.println("\nError: " + exception.getMessage());
+            System.out.println("Please try again.");
+        }
+    }
+
+    public void updateCustomerPhone(Scanner input) {
+        System.out.print("\nUpdating a customer's phone number.\nCustomer CPF: ");
+        String cpf = validation.getCpf(input);
+        try {
+            Customer customer = service.searchCustomer(cpf);
+            if (customer == null) {
+                System.out.println("\nCustomer not found.");
+                return;
+            }
+            System.out.println(customer);
+            System.out.print("Customer new phone number: ");
+            String newPhone = validation.getPhone(input);
+            int success = service.updateCustomerPhone(customer.getCpf(), newPhone);
+            switch (success) {
+                case -1 -> System.out.println("\nCustomer not found.");
+                case -2 -> System.out.println("\nError. Same phone number.");
+                case 1 -> System.out.println("\nCustomer phone number updated successfully.");
+                default -> System.out.print("\nError. Please try again.");
+            }
+        } catch (RuntimeException exception) {
+            System.out.println("\nError: " + exception.getMessage());
+            System.out.println("Please try again.");
+        }
+    }
+
     public void registerRental(Scanner input) {
         System.out.print("\nCustomer CPF: ");
         String cpf = validation.getCpf(input);
@@ -154,12 +204,12 @@ public class Main {
         try {
             int rentalId = service.registerRental(cpf, carPlates, initialDate, returnDate);
             switch (rentalId) {
-                case -1 -> System.out.print("\nError. Customer not found.");
-                case -2 -> System.out.print("\nError. Car(s) not found");
-                case -3 -> System.out.print("\nError. Invalid rental date");
-                case -4 -> System.out.print("\nError. Invalid Status.");
-                case -5 -> System.out.print("\nError. Customer already has an active rental.");
-                case -6 -> System.out.print("\nError. Car(s) not available for rental at the moment.");
+                case -1 -> System.out.println("\nError. Customer not found.");
+                case -2 -> System.out.println("\nError. Car(s) not found");
+                case -3 -> System.out.println("\nError. Invalid rental date");
+                case -4 -> System.out.println("\nError. Invalid Status.");
+                case -5 -> System.out.println("\nError. Customer already has an active rental.");
+                case -6 -> System.out.println("\nError. Car(s) not available for rental at the moment.");
                 default -> System.out.println("\nRental registered successfully.\nRental ID: " + rentalId);
             }
         } catch (RuntimeException exception) {
@@ -208,6 +258,31 @@ public class Main {
             System.out.println("Features: ");
             carFeatures.forEach(System.out::print);
             System.out.println();
+        } catch (RuntimeException exception) {
+            System.out.println("\nError: " + exception.getMessage());
+            System.out.println("Please try again.");
+        }
+    }
+
+    public void updateDailyRate(Scanner input) {
+        System.out.print("\nUpdating a Car's Daily Rate.\nCar plate: ");
+        String plate = validation.getPlate(input);
+        try {
+            Car car = service.searchCar(plate);
+            if (car == null) {
+                System.out.println("\nCar not found.");
+                return;
+            }
+            System.out.println(car);
+            System.out.print("\nNew Daily Rate: ");
+            BigDecimal newDailyRate = validation.getPrice(input);
+            int success = service.updateDailyRate(car.getPlate(), newDailyRate);
+            switch (success) {
+                case -1 -> System.out.println("\nCar not found.");
+                case -2 -> System.out.println("\nError. Same Daily Rate.");
+                case 1 -> System.out.println("\nCar's Daily Rate updated successfully.");
+                default -> System.out.println("\nError. Please try again.");
+            }
         } catch (RuntimeException exception) {
             System.out.println("\nError: " + exception.getMessage());
             System.out.println("Please try again.");
@@ -536,6 +611,7 @@ public class Main {
                 2. Search Car
                 3. Car Rental History
                 4. Register New Feature
+                5. Update a Car's Daily Rate
                 0. Back""");
         System.out.print("\nChoose an option: ");
     }
@@ -549,6 +625,8 @@ public class Main {
                 1. Register Customer
                 2. Search Customer
                 3. Customer Rental History
+                4. Update Customer's Email
+                5. Update Customer's Phone Number
                 0. Back""");
         System.out.print("\nChoose an option: ");
     }
@@ -627,8 +705,6 @@ public class Main {
         System.out.print("\nChoose an option: ");
     }
 
-
-
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         Main main = new Main();
@@ -649,6 +725,7 @@ public class Main {
                             case 2 -> main.searchCar(input);
                             case 3 -> main.carRentalHistory(input);
                             case 4 -> main.registerFeature(input);
+                            case 5 -> main.updateDailyRate(input);
                             case 0 -> System.out.println("\nReturning to the previous menu.");
                             default -> System.out.print("\nInvalid option.");
                         }
@@ -663,6 +740,8 @@ public class Main {
                             case 1 -> main.registerCustomer(input);
                             case 2 -> main.searchCustomer(input);
                             case 3 -> main.customerRentalHistory(input);
+                            case 4 -> main.updateCustomerEmail(input);
+                            case 5 -> main.updateCustomerPhone(input);
                             case 0 -> System.out.println("\nReturning to the previous menu.");
                             default -> System.out.print("\nInvalid option.");
                         }
@@ -745,37 +824,5 @@ public class Main {
         }
         input.close();
         HibernateUtil.getSessionFactory().close();
-
-        //main.registerFeature(input);
-        //main.registerCustomer(input);
-        //main.registerCar(input);
-
-
-        //main.registerRental(input);
-        //main.searchRental(input);
-        //main.changeReturnDate(input);
-        //main.searchRental(input);
-        //main.completeRental(input);
-        //main.cancelRental(input);
-
-        //Customer customer = main.searchCustomer(input);
-        //main.searchCar(input);
-        //main.customerRentalHistory(input);
-        //main.carRentalHistory(input);
-
-        //main.searchRentalByDate(input);
-        //main.rentalsByInitialDate(input);
-        //main.rentalsByReturnDate(input);
-        //main.rentalsByStatus(input);
-        //main.avgRentalPrice();
-        //main.rentalCount();
-        //main.rentalsByCpf(input);
-        //main.rentalsByName(input);
-        //main.rentalsByPrice();
-        //main.countRentalsByStatus(input);
-        //main.avgRentalPriceByCustomer(input);
-        //main.avgRentalDays();
-        //main.avgRentalDaysByCustomer(input);
-
     }
 }
