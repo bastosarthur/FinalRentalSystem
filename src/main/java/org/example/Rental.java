@@ -5,6 +5,7 @@ import org.hibernate.generator.EventType;
 import org.hibernate.annotations.Generated;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.math.BigDecimal;
@@ -45,6 +46,9 @@ public class Rental {
             joinColumns = @JoinColumn(name = "rental_id"),
             inverseJoinColumns = @JoinColumn(name = "car_plate"))
     List<Car> carList = new ArrayList<>();
+
+    @Column(name = "registered_at", nullable = false, updatable = false, insertable = false)
+    LocalDateTime registrationTime;
 
     protected Rental() {}
 

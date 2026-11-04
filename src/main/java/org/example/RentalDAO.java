@@ -4,6 +4,7 @@ import org.hibernate.Session;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class RentalDAO {
@@ -137,6 +138,18 @@ public class RentalDAO {
                         FROM Rental
                         """, Double.class)
                         .getSingleResult();
+    }
+
+    public List<Rental> findRentalByRegistDay(Session session, LocalDateTime startDate, LocalDateTime endDate) {
+        return session.createQuery("""
+                        FROM Rental
+                        WHERE registrationTime >= :startDate
+                        AND
+                        registrationTime <= :endDate
+                        """, Rental.class)
+                        .setParameter("startDate", startDate)
+                        .setParameter("endDate", endDate)
+                        .getResultList();
     }
 
 

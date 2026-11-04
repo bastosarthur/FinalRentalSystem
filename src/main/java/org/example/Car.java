@@ -1,6 +1,9 @@
 package org.example;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.math.BigDecimal;
 
@@ -34,6 +37,9 @@ public class Car {
 
     @ManyToMany(mappedBy = "carList", fetch = FetchType.EAGER)
     private List<Rental> rentalHistory;
+
+    @Column(name = "registered_at", nullable = false, updatable = false, insertable = false)
+    LocalDateTime registrationTime;
 
     protected Car() {}
 

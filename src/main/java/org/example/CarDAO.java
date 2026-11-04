@@ -1,6 +1,8 @@
 package org.example;
 
 import org.hibernate.Session;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class CarDAO {
@@ -29,6 +31,18 @@ public class CarDAO {
                     """, Feature.class)
                     .setParameter("featureName", featureName.toLowerCase())
                     .getSingleResultOrNull();
+    }
+
+    public List<Car> findByRegistrationDate(Session session, LocalDateTime startDate, LocalDateTime endDate) {
+        return session.createQuery("""
+                    FROM Car
+                    WHERE registrationTime >= :startDate
+                    AND
+                    registrationTime <= :endDate
+                    """, Car.class)
+                    .setParameter("startDate", startDate)
+                    .setParameter("endDate", endDate)
+                    .getResultList();
     }
 
 }

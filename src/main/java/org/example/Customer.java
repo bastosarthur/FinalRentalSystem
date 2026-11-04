@@ -1,6 +1,8 @@
 package org.example;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -26,6 +28,9 @@ public class Customer {
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER)
     List<Rental> rentalHistory;
+
+    @Column(name = "registered_at", nullable = false, updatable = false, insertable = false)
+    LocalDateTime registrationTime;
 
     @Override
         public String toString() {

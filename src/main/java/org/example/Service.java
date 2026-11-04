@@ -4,6 +4,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.math.BigDecimal;
@@ -43,6 +44,14 @@ public class Service {
         }
     }
 
+    public List<Car> searchCarByRegistDate(LocalDate date) {
+        LocalDateTime startDate = date.atStartOfDay();
+        LocalDateTime endDate = date.plusDays(1).atStartOfDay();
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return carDAO.findByRegistrationDate(session, startDate, endDate);
+        }
+    }
+
     public int registerCustomer(Customer customer) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
@@ -71,6 +80,14 @@ public class Service {
                 }
                 throw exception;
             }
+        }
+    }
+
+    public List<Customer> searchCustomerByRegistDate(LocalDate date) {
+        LocalDateTime startDate = date.atStartOfDay();
+        LocalDateTime endDate = date.plusDays(1).atStartOfDay();
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return customerDAO.findByRegistrationDate(session, startDate, endDate);
         }
     }
 
@@ -314,6 +331,14 @@ public class Service {
                 }
                 throw exception;
             }
+        }
+    }
+
+    public List<Rental> searchRentalByRegistDate(LocalDate date) {
+        LocalDateTime startDate = date.atStartOfDay();
+        LocalDateTime endDate = date.plusDays(1).atStartOfDay();
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return rentalDAO.findRentalByRegistDay(session, startDate, endDate);
         }
     }
 

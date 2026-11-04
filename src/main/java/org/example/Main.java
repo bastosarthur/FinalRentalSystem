@@ -68,6 +68,22 @@ public class Main {
         }
     }
 
+    public void searchCarByRegistDate(Scanner input) {
+        System.out.print("\nSearching Cars by registration date.\nRegistration date: ");
+        LocalDate registrationDate = validation.getInitialDate(input);
+        try {
+            List<Car> carList = service.searchCarByRegistDate(registrationDate);
+            if (carList.isEmpty()) {
+                System.out.println("\nNo Cars registered on this date.");
+                return;
+            }
+            carList.forEach(System.out::print);
+        } catch (RuntimeException exception) {
+            System.out.println("\nError: " + exception.getMessage());
+            System.out.println("Please try again.");
+        }
+    }
+
     public void registerCustomer(Scanner input) {
         System.out.print("\nCustomer's CPF: ");
         String cpf = validation.getCpf(input);
@@ -129,6 +145,22 @@ public class Main {
                 System.out.println("\nCustomer not found.");
             }
             System.out.println(customer);
+        } catch (RuntimeException exception) {
+            System.out.println("\nError: " + exception.getMessage());
+            System.out.println("Please try again.");
+        }
+    }
+
+    public void searchCustomerByRegistDate(Scanner input) {
+        System.out.print("\nSearching Customers by registration date.\nRegistration date: ");
+        LocalDate registrationDate = validation.getInitialDate(input);
+        try {
+            List<Customer> customerList = service.searchCustomerByRegistDate(registrationDate);
+            if (customerList.isEmpty()) {
+                System.out.println("\nNo Customers registered on this date");
+                return;
+            }
+            customerList.forEach(System.out::print);
         } catch (RuntimeException exception) {
             System.out.println("\nError: " + exception.getMessage());
             System.out.println("Please try again.");
@@ -407,6 +439,22 @@ public class Main {
         }
     }
 
+    public void searchRentalByRegistDate(Scanner input) {
+        System.out.print("\nSearching Rentals by registration date.\nRegistration date: ");
+        LocalDate registrationDate = validation.getInitialDate(input);
+        try {
+            List<Rental> rentalList = service.searchRentalByRegistDate(registrationDate);
+            if (rentalList.isEmpty()) {
+                System.out.println("\nNo Rentals registred on this day.");
+                return;
+            }
+            rentalList.forEach(System.out::print);
+        } catch (RuntimeException exception) {
+            System.out.println("\nError: " + exception.getMessage());
+            System.out.println("Please try again.");
+        }
+    }
+
     public void rentalsByStatus(Scanner input) {
         System.out.print("\nSearching rentals by status.\nStatus ('active', 'completed', 'reserved', 'canceled'): ");
         String status = validation.getStatus(input);
@@ -609,9 +657,10 @@ public class Main {
     
                 1. Register Car
                 2. Search Car
-                3. Car Rental History
-                4. Register New Feature
-                5. Update a Car's Daily Rate
+                3. Search Car by Registration Date
+                4. Car Rental History
+                5. Register New Feature
+                6. Update a Car's Daily Rate
                 0. Back""");
         System.out.print("\nChoose an option: ");
     }
@@ -625,8 +674,9 @@ public class Main {
                 1. Register Customer
                 2. Search Customer
                 3. Customer Rental History
-                4. Update Customer's Email
-                5. Update Customer's Phone Number
+                4. Search Customer by Registration Date
+                5. Update Customer's Email
+                6. Update Customer's Phone Number
                 0. Back""");
         System.out.print("\nChoose an option: ");
     }
@@ -669,10 +719,11 @@ public class Main {
                 2. Search by Date
                 3. Search by Initial Date
                 4. Search by Return Date
-                5. Search by Status
-                6. Search by Customer CPF
-                7. Search by Customer Name
-                8. List Rentals by Price
+                5. Search by Rental Registration Date
+                6. Search by Status
+                7. Search by Customer CPF
+                8. Search by Customer Name
+                9. List Rentals by Price
                 0. Back
                 """);
         System.out.print("\nChoose an option: ");
@@ -723,9 +774,10 @@ public class Main {
                         switch (carMenu) {
                             case 1 -> main.registerCar(input);
                             case 2 -> main.searchCar(input);
-                            case 3 -> main.carRentalHistory(input);
-                            case 4 -> main.registerFeature(input);
-                            case 5 -> main.updateDailyRate(input);
+                            case 3 -> main.searchCarByRegistDate(input);
+                            case 4 -> main.carRentalHistory(input);
+                            case 5 -> main.registerFeature(input);
+                            case 6 -> main.updateDailyRate(input);
                             case 0 -> System.out.println("\nReturning to the previous menu.");
                             default -> System.out.print("\nInvalid option.");
                         }
@@ -740,8 +792,9 @@ public class Main {
                             case 1 -> main.registerCustomer(input);
                             case 2 -> main.searchCustomer(input);
                             case 3 -> main.customerRentalHistory(input);
-                            case 4 -> main.updateCustomerEmail(input);
-                            case 5 -> main.updateCustomerPhone(input);
+                            case 4 -> main.searchCustomerByRegistDate(input);
+                            case 5 -> main.updateCustomerEmail(input);
+                            case 6 -> main.updateCustomerPhone(input);
                             case 0 -> System.out.println("\nReturning to the previous menu.");
                             default -> System.out.print("\nInvalid option.");
                         }
@@ -779,10 +832,11 @@ public class Main {
                                         case 2 -> main.searchRentalByDate(input);
                                         case 3 -> main.rentalsByInitialDate(input);
                                         case 4 -> main.rentalsByReturnDate(input);
-                                        case 5 -> main.rentalsByStatus(input);
-                                        case 6 -> main.rentalsByCpf(input);
-                                        case 7 -> main.rentalsByName(input);
-                                        case 8 -> main.rentalsByPrice();
+                                        case 5 -> main.searchRentalByRegistDate(input);
+                                        case 6 -> main.rentalsByStatus(input);
+                                        case 7 -> main.rentalsByCpf(input);
+                                        case 8 -> main.rentalsByName(input);
+                                        case 9 -> main.rentalsByPrice();
                                         case 0 -> System.out.println("\nReturning to the previous menu.");
                                         default -> System.out.print("\nInvalid option.");
                                     }
