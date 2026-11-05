@@ -12,22 +12,23 @@ public class Main {
     final static Service service = new Service();
     final static InputValidation validation = new InputValidation();
 
+    // These represent features.feature_id, so arrange the numbers accordingly
     public void featuresMenu() {
         System.out.println("\nAvailable Features:");
-        System.out.println("1. GPS");
-        System.out.println("6. Air Conditioner");
-        System.out.println("7. Airbags (6)");
-        System.out.println("8. Airbags (8)");
-        System.out.println("9. Auto Cruise");
-        System.out.println("10. Automatic Gear");
-        System.out.println("11. Manual Gear");
+        System.out.println("1. Air Conditioner");
+        System.out.println("2. GPS");
+        System.out.println("3. Manual Gear");
+        System.out.println("4. Automatic Gear");
+        System.out.println("5. Hybrid Gear");
+        System.out.println("6. 6 Air-bags");
+        System.out.println("7. 8 Air-bags");
+        System.out.println("8. Auto-cruise");
+        System.out.println("9. Auto-drive");
+        System.out.println("10. Heated Seats");
+        System.out.println("11. Leather Seats");
         System.out.println("12. Turbo");
-        System.out.println("13. Electric");
-        System.out.println("14. Fuel");
-        System.out.println("15. Hybrid");
-        System.out.println("16. 2x4");
-        System.out.println("17. 4x4");
-        System.out.println("18. Auto-drive");
+        System.out.println("13. V6-Engine");
+        System.out.println("14. V8-Engine");
         System.out.println("0. EXIT");
         System.out.println("\nFeature ID: ");
     }
